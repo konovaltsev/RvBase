@@ -1,0 +1,17 @@
+{
+    "name": "konovaltsev/RvBase",
+    "description": "My basic extension for Zend Framework 2",
+    "keywords": [
+        "zf2",
+        "module",
+        "extension"
+    ],
+    "autoload": {
+        "psr-0": {
+            "RvBase\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=5.4.0"
+    }
+}

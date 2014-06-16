@@ -1,4 +1,4 @@
 RvBase
 ======
 
-My basic extentions for Zend Framework 2
+My basic extension for Zend Framework 2
