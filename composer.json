@@ -6,12 +6,25 @@
         "module",
         "extension"
     ],
+    "authors": [
+        {
+            "name": "Roman V. Konovaltsev",
+            "homepage": "http://konovaltsev.ru/"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packages.zendframework.com/"
+        }
+    ],
     "autoload": {
         "psr-0": {
             "RvBase\\": "src/"
         }
     },
     "require": {
+        "zendframework/zend-db": ">=2.3",
         "php": ">=5.4.0"
     }
 }

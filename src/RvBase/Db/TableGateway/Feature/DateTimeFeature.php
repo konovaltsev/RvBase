@@ -22,8 +22,6 @@ class DateTimeFeature extends AbstractFeature
 
     public function preInsert(Insert $insert)
     {
-
-
         foreach($this->columns as $c)
         {
             $v = $insert->$c;
