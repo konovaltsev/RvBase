@@ -8,7 +8,7 @@ use Zend\Db\TableGateway\TableGateway;
  * Class AbstractTableGatewayService
  * @package RvBase\Service\Entity
  */
-class AbstractTableGatewayService 
+class AbstractTable
 {
     protected $tableGateway;
     protected $primaryKey = null;
@@ -47,4 +47,4 @@ class AbstractTableGatewayService
         $rowset = $this->tableGateway->select(array($this->getPrimaryKey() => $id));
         return $rowset->current();
     }
-} 
+}

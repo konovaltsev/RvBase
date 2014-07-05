@@ -3,6 +3,7 @@
 namespace RvBase\Db\TableGateway\Feature;
 
 use Zend\Db\Sql\Insert;
+use Zend\Db\Sql\Update;
 use Zend\Db\TableGateway\Feature\AbstractFeature;
 
 /**
@@ -32,5 +33,17 @@ class DateTimeFeature extends AbstractFeature
         }
 
         return $insert;
+    }
+
+    public function preUpdate(Update $update)
+    {
+        $set = $update->getRawState('set');
+        foreach($this->columns as $c)
+        {
+            if(array_key_exists($c, $set) && ($set[$c] instanceof \DateTime))
+            {
+                $update->set(array($c => $set[$c]->format($this->format)), $update::VALUES_MERGE);
+            }
+        }
     }
 }
