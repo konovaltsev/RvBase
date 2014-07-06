@@ -1,12 +1,14 @@
 <?php
 
-namespace RvBase\Service\Entity;
+namespace RvBase\Table;
+
 use RvBase\Entity\AbstractArrayEntity;
+use RvBase\Table\Exception;
 use Zend\Db\TableGateway\TableGateway;
 
 /**
  * Class AbstractArrayTableGatewayService
- * @package RvBase\Service\Entity
+ * @package RvBase\Table
  */
 class AbstractTableArrayEntity
 {

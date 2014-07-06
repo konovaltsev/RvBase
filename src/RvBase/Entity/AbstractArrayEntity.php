@@ -1,6 +1,8 @@
 <?php
 
 namespace RvBase\Entity;
+use Zend\InputFilter\InputFilterAwareInterface;
+use Zend\InputFilter\InputFilterInterface;
 
 /**
  * Class AbstractArrayEntity
@@ -10,6 +12,7 @@ class AbstractArrayEntity
 {
     protected $data = array();
     protected $changed = array();
+    protected $sourceInputFilter;
 
     /**
      * Установка свойства
@@ -49,7 +52,33 @@ class AbstractArrayEntity
 
     public function exchangeArray($data)
     {
+        $filters = $this->getInputFilter();
+        if(!empty($filters))
+        {
+            $data = array_merge($data, $filters->setData($data)->getValues());
+        }
         $this->data = $data;
+    }
+
+    /**
+     * Set input filter
+     *
+     * @param  InputFilterInterface $inputFilter
+     * @return InputFilterAwareInterface
+     */
+    public function setSourceInputFilter(InputFilterInterface $inputFilter)
+    {
+        $this->sourceInputFilter = $inputFilter;
+    }
+
+    /**
+     * Retrieve input filter
+     *
+     * @return InputFilterInterface
+     */
+    public function getInputFilter()
+    {
+        return $this->sourceInputFilter;
     }
 
     public function getArrayData()

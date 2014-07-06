@@ -13,12 +13,15 @@ use Zend\Db\TableGateway\Feature\AbstractFeature;
 class DateTimeFeature extends AbstractFeature
 {
     protected $columns = array();
-    protected $format;
+    protected $format = \DateTime::ISO8601;
 
-    public function __construct($columns, $format=\DateTime::ISO8601)
+    public function __construct($columns, $format = null)
     {
         $this->columns = $columns;
-        $this->format = $format;
+        if($format !== null)
+        {
+            $this->format = $format;
+        }
     }
 
     public function preInsert(Insert $insert)
