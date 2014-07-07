@@ -19,7 +19,7 @@ class AbstractArrayEntity
      *
      * @param string $field
      * @param mixed $value
-     * @return $this
+     * @return static
      */
     public function setArrayField($field, $value)
     {
