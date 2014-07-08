@@ -64,11 +64,12 @@ class AbstractArrayEntity
      * Set input filter
      *
      * @param  InputFilterInterface $inputFilter
-     * @return InputFilterAwareInterface
+     * @return static
      */
     public function setSourceInputFilter(InputFilterInterface $inputFilter)
     {
         $this->sourceInputFilter = $inputFilter;
+        return $this;
     }
 
     /**
