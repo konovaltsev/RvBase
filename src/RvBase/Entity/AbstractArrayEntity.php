@@ -2,6 +2,8 @@
 
 namespace RvBase\Entity;
 
+use Zend\InputFilter\InputFilterInterface;
+
 /**
  * Class AbstractArrayEntity
  * @package RvBase\Entity
