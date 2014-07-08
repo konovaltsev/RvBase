@@ -6,7 +6,7 @@ use Zend\InputFilter\InputFilterInterface;
 
 /**
  * Class AbstractArrayEntity
- * @package MagicTower\Entity
+ * @package RvBase\Entity
  */
 class AbstractArrayEntity
 {
