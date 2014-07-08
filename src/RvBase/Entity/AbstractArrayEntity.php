@@ -52,7 +52,7 @@ class AbstractArrayEntity
 
     public function exchangeArray($data)
     {
-        $filters = $this->getInputFilter();
+        $filters = $this->getSourceInputFilter();
         if(!empty($filters))
         {
             $data = array_merge($data, $filters->setData($data)->getValues());
@@ -76,7 +76,7 @@ class AbstractArrayEntity
      *
      * @return InputFilterInterface
      */
-    public function getInputFilter()
+    public function getSourceInputFilter()
     {
         return $this->sourceInputFilter;
     }
