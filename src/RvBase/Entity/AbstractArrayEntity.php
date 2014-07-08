@@ -1,8 +1,6 @@
 <?php
 
 namespace RvBase\Entity;
-use Zend\InputFilter\InputFilterAwareInterface;
-use Zend\InputFilter\InputFilterInterface;
 
 /**
  * Class AbstractArrayEntity
