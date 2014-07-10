@@ -1,4 +1,7 @@
 <?php
+/**
+ * Or extend
+ */
 
 namespace RvBase\Permissions\Acl;
 

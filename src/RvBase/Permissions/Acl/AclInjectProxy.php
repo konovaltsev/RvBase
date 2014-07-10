@@ -1,4 +1,7 @@
 <?php
+/**
+ * Or proxy
+ */
 
 namespace RvBase\Permissions\Acl;
 
