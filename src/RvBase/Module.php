@@ -1,8 +1,10 @@
 <?php
 
 namespace RvBase;
-use Zend\Mvc\ModuleRouteListener;
-use Zend\Mvc\MvcEvent;
+
+use Zend\EventManager\EventInterface;
+use Zend\ModuleManager\Feature;
+
 use Zend\Navigation\Page\AbstractPage;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -11,14 +13,45 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @package RvBase
  */
 class Module
+    implements
+        Feature\ConfigProviderInterface,
+        Feature\BootstrapListenerInterface
 {
-    public function onBootstrap(MvcEvent $e)
+    /**
+     * Returns configuration to merge with application configuration
+     *
+     * @return array|\Traversable
+     */
+    public function getConfig()
     {
-//        $eventManager        = $e->getApplication()->getEventManager();
-//        $moduleRouteListener = new ModuleRouteListener();
-//        $moduleRouteListener->attach($eventManager);
+        return include __DIR__ . '/../../config/rv-base.config.php';
+    }
 
-        $serviceManager = $e->getTarget()->getServiceManager();
+    public function onBootstrap(EventInterface $e)
+    {
+        /** @var \Zend\Mvc\MvcEvent $e */
+        /** @var $application \Zend\Mvc\Application */
+        $application = $e->getApplication();
+        $serviceManager = $application->getServiceManager();
+        $applicationEventManager = $application->getEventManager();
+
+        $config = $serviceManager->get('Config');
+        if($config['rv-base']['view-manager']['enabled'] === true && $serviceManager->has('rv-base.view-manager'))
+        {
+            /** @var \RvBase\Mvc\View\Http\ViewManager $rvViewManager */
+            $rvViewManager = $serviceManager->get('rv-base.view-manager');
+            if($rvViewManager)
+            {
+                $rvViewManager->onBootstrap($e);
+            }
+        }
+
+        if($config['rv-base']['dispatch-listener']['enabled'] === true)
+        {
+            /** @var \RvBase\Mvc\View\Http\ViewManager $rvViewManager */
+            $applicationEventManager->attachAggregate($serviceManager->get('rv-base.dispatch-listener'));
+        }
+
         $this->initNavigationPageFactories($serviceManager);
     }
 
