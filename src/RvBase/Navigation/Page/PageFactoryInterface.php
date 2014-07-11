@@ -3,10 +3,10 @@
 namespace RvBase\Navigation\Page;
 
 /**
- * Class FactoryInterface
+ * Class PageFactoryInterface
  * @package RvBase\Navigation\Page
  */
-interface FactoryInterface
+interface PageFactoryInterface
 {
     public function createPage($options);
 }

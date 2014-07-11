@@ -14,9 +14,9 @@ class Module
 {
     public function onBootstrap(MvcEvent $e)
     {
-        $eventManager        = $e->getApplication()->getEventManager();
-        $moduleRouteListener = new ModuleRouteListener();
-        $moduleRouteListener->attach($eventManager);
+//        $eventManager        = $e->getApplication()->getEventManager();
+//        $moduleRouteListener = new ModuleRouteListener();
+//        $moduleRouteListener->attach($eventManager);
 
         $serviceManager = $e->getTarget()->getServiceManager();
         $this->initNavigationPageFactories($serviceManager);
@@ -31,7 +31,7 @@ class Module
                 {
                     return null;
                 }
-                /** @var \RvBase\Navigation\Page\FactoryInterface $pageFactory */
+                /** @var \RvBase\Navigation\Page\PageFactoryInterface $pageFactory */
                 $pageFactory = $serviceLocator->get($options['page-factory']);
                 $options['page-factory'] = null;
                 return $pageFactory->createPage($options);

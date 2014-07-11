@@ -26,6 +26,9 @@
     "minimum-stability": "dev",
     "require": {
         "zendframework/zend-db":     "~2.3",
+        "zendframework/zend-mvc": "~2.3",
+        "zendframework/zend-navigation": "~2.3",
+        "zendframework/zend-permissions-acl": "~2.3",
         "zendframework/zend-stdlib": "~2.3",
         "php":                       ">=5.4.0"
     },
