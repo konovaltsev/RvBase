@@ -22,6 +22,11 @@ class NotAllowed extends AbstractPlugin
 	protected $event;
 	protected $response;
 
+	public function __invoke()
+	{
+		return $this->getModel();
+	}
+
 	public function getModel()
 	{
 		$response   = $this->getResponse();
