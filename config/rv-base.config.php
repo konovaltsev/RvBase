@@ -16,6 +16,12 @@ return array(
         ),
     ),
 
+	'controller_plugins' => array(
+		'invokables' => array(
+			'notallowed' => 'RvBase\Mvc\Controller\Plugin\NotAllowed',
+		),
+	),
+
     'service_manager' => array(
         'factories' => array(
             'rv-base.view-manager' => 'RvBase\Mvc\Service\ViewManagerFactory',
