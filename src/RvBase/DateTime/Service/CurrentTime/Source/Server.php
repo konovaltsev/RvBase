@@ -13,7 +13,7 @@ class Server implements SourceInterface
      */
     public function getTime()
     {
-        $d = \DateTime::createFromFormat('U.u', microtime(true));
+        $d = \DateTime::createFromFormat('U.u', sprintf('%.06f', microtime(true)));
         $d->setTimezone(new \DateTimeZone(date_default_timezone_get()));
         return $d;
     }
