@@ -9,11 +9,11 @@ use RvBase\DateTime\Service\CurrentTime\TimeProviderInterface;
  */
 class CurrentTime implements SourceInterface
 {
-    protected $timeProvider;
+	protected static $time;
 
     public function __construct(TimeProviderInterface $timeProvider)
     {
-        $this->timeProvider = $timeProvider;
+		static::$time = $timeProvider->getCurrentTime();
     }
 
     /**
@@ -21,6 +21,6 @@ class CurrentTime implements SourceInterface
      */
     public function getTime()
     {
-        return $this->timeProvider->getCurrentTime();
+        return self::$time;
     }
 }
