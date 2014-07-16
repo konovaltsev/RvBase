@@ -21,6 +21,6 @@ class CurrentTime implements SourceInterface
      */
     public function getTime()
     {
-        return self::$time;
+        return clone self::$time;
     }
 }
