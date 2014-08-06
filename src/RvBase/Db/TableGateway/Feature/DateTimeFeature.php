@@ -13,7 +13,7 @@ use Zend\Db\TableGateway\Feature\AbstractFeature;
 class DateTimeFeature extends AbstractFeature
 {
     protected $columns = array();
-    protected $format = \DateTime::ISO8601;
+    protected $format = 'Y-m-d H:i:s.u T';
 
     public function __construct($columns, $format = null)
     {
