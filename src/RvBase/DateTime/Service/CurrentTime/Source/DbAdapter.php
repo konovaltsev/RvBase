@@ -32,8 +32,8 @@ class DbAdapter implements SourceInterface
             )
         );
 
-        $selectString = $sql->getSqlStringForSqlObject($select);
-        $results = $adapter->query($selectString, $adapter::QUERY_MODE_EXECUTE);
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $results = $statement->execute();
         $d = new \DateTime($results->current()['now']);
         $d->setTimezone(new \DateTimeZone(date_default_timezone_get()));
         return $d;

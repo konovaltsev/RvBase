@@ -13,6 +13,7 @@ use Zend\Db\TableGateway\TableGateway;
 class AbstractTableArrayEntity
 {
     protected $tableGateway;
+
     protected $primaryKey = null;
 
     public function __construct(TableGateway $tableGateway)
@@ -46,7 +47,7 @@ class AbstractTableArrayEntity
 
     public function findEntity($id)
     {
-        $rowSet = $this->tableGateway->select($this->getIdFieldsFromData($id));
+        $rowSet = $this->getTableGateway()->select($this->getIdFieldsFromData($id));
         return $rowSet->current();
     }
 
@@ -62,7 +63,7 @@ class AbstractTableArrayEntity
             return $this;
         }
 
-        $result = $this->tableGateway->update(
+        $result = $this->getTableGateway()->update(
             $data,
             $primary
         );
@@ -80,6 +81,14 @@ class AbstractTableArrayEntity
         $entity->clearChanged();
 
         return $this;
+    }
+
+    /**
+     * @return TableGateway
+     */
+    public function getTableGateway()
+    {
+        return $this->tableGateway;
     }
 
     protected function getIdFieldsFromData($data)
