@@ -4,6 +4,7 @@ namespace RvBase\Table;
 
 use RvBase\Entity\AbstractArrayEntity;
 use RvBase\Table\Exception;
+use Zend\Db\Sql\TableIdentifier;
 use Zend\Db\TableGateway\TableGateway;
 
 /**
@@ -89,6 +90,54 @@ class AbstractTableArrayEntity
     public function getTableGateway()
     {
         return $this->tableGateway;
+    }
+
+    /**
+     * @return string|TableIdentifier
+     */
+    public function getTable()
+    {
+        return $this->getTableGateway()->getTable();
+    }
+
+    /**
+     * @return string
+     */
+    public function getTableName()
+    {
+        $table = $this->getTable();
+        if($table instanceof TableIdentifier)
+        {
+            return $table->getTable();
+        }
+        return $table;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSchemaTableName()
+    {
+        $table = $this->getTable();
+        if($table instanceof TableIdentifier)
+        {
+            if($table->hasSchema())
+            {
+                return $table->getSchema() . $this->getIdentifierSeparator() . $table->getTable();
+            }
+            return $table->getTable();
+        }
+        return $table;
+    }
+
+    public function getIdentifierSeparator()
+    {
+        return $this->getTableGateway()->getAdapter()->getPlatform()->getIdentifierSeparator();
+    }
+
+    public function getTableColumnName($columnName)
+    {
+        return $this->getTableName() . $this->getIdentifierSeparator() . $columnName;
     }
 
     protected function getIdFieldsFromData($data)
