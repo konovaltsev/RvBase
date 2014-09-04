@@ -69,19 +69,9 @@ class AbstractTableArrayEntity
             $primary
         );
 
-        if(empty($result))
-        {
-            throw new Exception\RuntimeException(
-                sprintf(
-                    'Entity `%s` update is empty',
-                    get_class($entity)
-                )
-            );
-        }
-
         $entity->clearChanged();
 
-        return $this;
+        return $result;
     }
 
     /**
