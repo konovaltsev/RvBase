@@ -33,12 +33,12 @@ interface MailerInterface
      * Populate message object
      *
      * @param Message $message Message object for populate
-     * @param null $emailOrAddressList
-     * @param null $template
-     * @param array $templateVars
+     * @param null|string|\Zend\Mail\Address\AddressInterface|array|\Zend\Mail\AddressList|\Traversable $to
+     * @param null|string $template
+     * @param null|array $templateVars
      * @return void
      */
-    public function populateMessage(Message $message, $emailOrAddressList = null, $template = null, array $templateVars = array());
+    public function populateMessage(Message $message, $to = null, $template = null, array $templateVars = array());
 
     /**
      * Create, render and send message to Admin(s)
