@@ -32,38 +32,47 @@ return array(
             ),
         ),
         */
+    ),
 
-        /*
-        // Mail config example
-        'mail' => array(
-            'transports' => array(
-                'mail.transport.default' => array(
-                    'type' => 'smtp',
-                    'options' => array(
-                        'host' => 'example.com',
-                        'connection_class'  => 'plain',
-                        'connection_config' => array(
-                            'username' => 'noreply@example.com',
-                            'password' => 'dummy password',
-                        ),
+    /*
+    // Mail config example
+    'mail' => array(
+        'transports' => array(
+            'mail.transport.default' => array(
+                'type' => 'smtp',
+                'options' => array(
+                    'host' => 'example.com',
+                    'connection_class'  => 'plain',
+                    'connection_config' => array(
+                        'username' => 'noreply@example.com',
+                        'password' => 'dummy password',
                     ),
                 ),
             ),
-            'addresses' => array(
-                'from' => array(
-                    'noreply@example.com' => 'Example Mail Bot',
-                ),
-                'admin' => array(
-                    'admin1@example.com' => 'First Admin',
-                    'developer@another-example.com' => 'Second Admin',
+        ),
+        'messages' => array(
+            'options' => array(
+                'defaults' => array(
+                    'encoding' => 'UTF-8',
+                    'content_charset' => 'UTF-8',
+                    'content_type' => \Zend\Mime\Mime::TYPE_HTML,
+                    'content_encoding' => \Zend\Mime\Mime::ENCODING_BASE64,
                 ),
             ),
         ),
-
-         */
+        'addresses' => array(
+            'from' => array(
+                'noreply@example.com' => 'Example Mail Bot',
+            ),
+            'admin' => array(
+                'admin1@example.com' => 'First Admin',
+                'developer@another-example.com' => 'Second Admin',
+            ),
+        ),
     ),
+    */
 
-	'controller_plugins' => array(
+    'controller_plugins' => array(
 		'invokables' => array(
 			'notallowed' => 'RvBase\Mvc\Controller\Plugin\NotAllowed',
 		),
@@ -71,14 +80,16 @@ return array(
 
     'service_manager' => array(
         'factories' => array(
-            'rv-base.view-manager' => 'RvBase\Mvc\Service\ViewManagerFactory',
-            'rv-base.http-view-manager' => 'RvBase\Mvc\Service\HttpViewManagerFactory',
             'rv-base.dispatch-listener' => 'RvBase\Mvc\Service\DispatchListenerFactory',
+            'rv-base.http-view-manager' => 'RvBase\Mvc\Service\HttpViewManagerFactory',
+            'rv-base.mail.addresses' => 'RvBase\Mail\AddressProviderServiceFactory',
+            'rv-base.mail.messages' => 'RvBase\Mail\MessageProviderServiceFactory',
+            'rv-base.mailer' => 'RvBase\Mail\MailerServiceFactory',
 			'rv-base.time.current' => 'RvBase\DateTime\Service\CurrentTime\TimeProviderFactory',
 			'rv-base.time.current.source.db-adapter' => 'RvBase\DateTime\Service\CurrentTime\Source\DbAdapterSourceFactory',
 			'rv-base.time.request' => 'RvBase\DateTime\Service\RequestTime\RequestTimeProviderFactory',
 			'rv-base.time.request.source.current-time' => 'RvBase\DateTime\Service\RequestTime\Source\CurrentTimeSourceFactory',
-            'rv-base.mail.addresses' => 'RvBase\Mail\AddressProviderServiceFactory'
+            'rv-base.view-manager' => 'RvBase\Mvc\Service\ViewManagerFactory',
 		),
 		'invokables' => array(
 		),
