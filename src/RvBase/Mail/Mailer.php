@@ -63,13 +63,31 @@ class Mailer implements MailerInterface
      * @param $emailOrAddressList string|\Zend\Mail\Address\AddressInterface|array|\Zend\Mail\AddressList|\Traversable $emailOrAddressList
      * @param $template
      * @param array $templateVars
+     * @param callable $callback
      * @return void
      */
-    public function sendTo($emailOrAddressList, $template, array $templateVars)
+    public function sendTo($emailOrAddressList, $template, array $templateVars, $callback = null)
     {
         $message = $this->createMessage();
         $this->populateMessage($message, $emailOrAddressList, $template, $templateVars);
+        if($callback !== null)
+        {
+            call_user_func($callback, $message);
+        }
         $this->send($message);
+    }
+
+    /**
+     * Create, render and send message to Admin(s)
+     *
+     * @param string $template
+     * @param $templateVars
+     * @param callable $callback
+     * @return void
+     */
+    public function sendToAdmin($template, $templateVars, $callback = null)
+    {
+        $this->sendTo($this->getAdminAddress(), $template, $templateVars, $callback);
     }
 
     /**
@@ -98,18 +116,6 @@ class Mailer implements MailerInterface
             $bodyContent = $this->renderBody($template, $templateVars);
             $message->setBody($this->createMimeMessage($bodyContent));
         }
-    }
-
-    /**
-     * Create, render and send message to Admin(s)
-     *
-     * @param string $template
-     * @param $templateVars
-     * @return void
-     */
-    public function sendToAdmin($template, $templateVars)
-    {
-        $this->sendTo($this->getAdminAddress(), $template, $templateVars);
     }
 
     /**
