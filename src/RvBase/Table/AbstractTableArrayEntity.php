@@ -83,6 +83,22 @@ class AbstractTableArrayEntity
     }
 
     /**
+     * @return \Zend\Db\Adapter\AdapterInterface
+     */
+    public function getAdapter()
+    {
+        return $this->getTableGateway()->getAdapter();
+    }
+
+    /**
+     * @return \Zend\Db\Sql\Sql
+     */
+    public function getSql()
+    {
+        return $this->getTableGateway()->getSql();
+    }
+
+    /**
      * @return string|TableIdentifier
      */
     public function getTable()

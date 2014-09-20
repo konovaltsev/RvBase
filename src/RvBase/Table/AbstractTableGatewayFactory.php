@@ -30,7 +30,7 @@ abstract class AbstractTableGatewayFactory implements FactoryInterface
     {
         $adapter = $serviceLocator->get($this->adapterName);
 
-        $entity = $this->createEntityPrototype();
+        $entity = $this->createEntityPrototype($serviceLocator);
 
         $resultSetPrototype = new ResultSet();
         $resultSetPrototype->setArrayObjectPrototype($entity);
@@ -38,7 +38,7 @@ abstract class AbstractTableGatewayFactory implements FactoryInterface
         return new TableGateway(
             $this->table,
             $adapter,
-            $this->getFeatures(),
+            $this->getFeatures($serviceLocator),
             $resultSetPrototype
         );
     }
@@ -46,9 +46,10 @@ abstract class AbstractTableGatewayFactory implements FactoryInterface
     /**
      * Get features for table gateway
      *
+     * @param ServiceLocatorInterface $serviceLocator
      * @return array
      */
-    public function getFeatures()
+    public function getFeatures(ServiceLocatorInterface $serviceLocator)
     {
         return array();
     }
@@ -56,7 +57,8 @@ abstract class AbstractTableGatewayFactory implements FactoryInterface
     /**
      * Create and init entity object for ResultSet prototype
      *
-     * return mixed
+     * @param ServiceLocatorInterface $serviceLocator
+     * @return mixed
      */
-    abstract public function createEntityPrototype();
+    abstract public function createEntityPrototype(ServiceLocatorInterface $serviceLocator);
 }
