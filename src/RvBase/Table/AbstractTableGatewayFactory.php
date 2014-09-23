@@ -1,4 +1,7 @@
 <?php
+/**
+ * @deprecated Use AbstractArrayEntityTableFactory instead
+ */
 
 namespace RvBase\Table;
 

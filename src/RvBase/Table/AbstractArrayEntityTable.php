@@ -11,11 +11,14 @@ use Zend\Db\TableGateway\TableGateway;
  * Class AbstractArrayTableGatewayService
  * @package RvBase\Table
  */
-class AbstractTableArrayEntity
+class AbstractArrayEntityTable
 {
     protected $tableGateway;
 
     protected $primaryKey = null;
+
+    /** @var ArrayEntityIdentityMap */
+    protected $identityMap;
 
     public function __construct(TableGateway $tableGateway)
     {
@@ -48,6 +51,10 @@ class AbstractTableArrayEntity
 
     public function findEntity($id)
     {
+        if($this->identityMap instanceof ArrayEntityIdentityMap && $this->identityMap->exists($id))
+        {
+            return $this->identityMap->getEntityFromMap($id);
+        }
         $rowSet = $this->getTableGateway()->select($this->getIdFieldsFromData($id));
         return $rowSet->current();
     }
@@ -163,5 +170,15 @@ class AbstractTableArrayEntity
             $id[$field] = $data[$field];
         }
         return $id;
+    }
+
+    /**
+     * @param ArrayEntityIdentityMap $identityMap
+     * @return $this
+     */
+    public function setIdentityMap(ArrayEntityIdentityMap $identityMap)
+    {
+        $this->identityMap = $identityMap;
+        return $this;
     }
 }

@@ -15,6 +15,20 @@ class AbstractArrayEntity
     protected $sourceInputFilter;
 
     /**
+     * Lazy load data providers
+     *
+     * @var callable[]
+     */
+    protected $lazyLoader = array();
+
+    /**
+     * Lazy load data
+     *
+     * @var array
+     */
+    protected $lazyData = array();
+
+    /**
      * Установка свойства
      *
      * @param string $field
@@ -50,6 +64,21 @@ class AbstractArrayEntity
         return $this->data[$field];
     }
 
+    /**
+     * Получение данных из ленивой загрузки
+     *
+     * @param $field
+     */
+    public function getLazyField($field)
+    {
+        if(!array_key_exists($field, $this->lazyData))
+        {
+            $this->lazyData[$field] = call_user_func($this->lazyLoader[$field], $this);
+        }
+
+        return $this->lazyData[$field];
+    }
+
     public function exchangeArray($data)
     {
         $filters = $this->getSourceInputFilter();
@@ -58,6 +87,35 @@ class AbstractArrayEntity
             $data = array_merge($data, $filters->setData($data)->getValues());
         }
         $this->data = $data;
+    }
+
+    /**
+     * Set lazy loader for field
+     *
+     * @param $field
+     * @param callable $loader
+     * @return $this
+     */
+    public function setLazyLoader($field, callable $loader)
+    {
+        $this->lazyLoader[$field] = $loader;
+        return $this;
+    }
+
+    /**
+     * @param array $loaders 'field' => callback
+     * @return $this
+     */
+    public function addLazyLoaders(array $loaders)
+    {
+        array_walk(
+            $loaders,
+            function($callback, $field)
+            {
+                $this->setLazyLoader($field, $callback);
+            }
+        );
+        return $this;
     }
 
     /**
