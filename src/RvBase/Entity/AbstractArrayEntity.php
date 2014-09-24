@@ -3,12 +3,13 @@
 namespace RvBase\Entity;
 
 use Zend\InputFilter\InputFilterInterface;
+use ArrayAccess;
 
 /**
  * Class AbstractArrayEntity
  * @package RvBase\Entity
  */
-class AbstractArrayEntity
+abstract class AbstractArrayEntity implements ArrayAccess
 {
     protected $data = array();
     protected $changed = array();
@@ -153,5 +154,108 @@ class AbstractArrayEntity
     public function clearChanged()
     {
         $this->changed = array();
+    }
+
+    /**
+     * (PHP 5 &gt;= 5.0.0)<br/>
+     * Whether a offset exists
+     * @link http://php.net/manual/en/arrayaccess.offsetexists.php
+     * @param mixed $offset <p>
+     * An offset to check for.
+     * </p>
+     * @return boolean true on success or false on failure.
+     * </p>
+     * <p>
+     * The return value will be casted to boolean if non-boolean was returned.
+     */
+    public function offsetExists($offset)
+    {
+        return array_key_exists($offset, $this->data) || array_key_exists($offset, $this->lazyLoader);
+    }
+
+    /**
+     * (PHP 5 &gt;= 5.0.0)<br/>
+     * Offset to retrieve
+     * @link http://php.net/manual/en/arrayaccess.offsetget.php
+     * @param mixed $offset <p>
+     * The offset to retrieve.
+     * </p>
+     * @return mixed Can return all value types.
+     */
+    public function offsetGet($offset)
+    {
+        if(array_key_exists($offset, $this->data))
+        {
+            return $this->getArrayField($offset);
+        }
+
+        if(array_key_exists($offset, $this->lazyLoader))
+        {
+            return $this->getLazyField($offset);
+        }
+
+        throw new Exception\InvalidArgumentException(
+            sprintf(
+                '%s: invalid offset `%s`',
+                __METHOD__,
+                $offset
+            )
+        );
+    }
+
+    /**
+     * (PHP 5 &gt;= 5.0.0)<br/>
+     * Offset to set
+     * @link http://php.net/manual/en/arrayaccess.offsetset.php
+     * @param mixed $offset <p>
+     * The offset to assign the value to.
+     * </p>
+     * @param mixed $value <p>
+     * The value to set.
+     * </p>
+     * @return void
+     */
+    public function offsetSet($offset, $value)
+    {
+        if(!array_key_exists($offset, $this->data))
+        {
+            throw new Exception\InvalidArgumentException(
+                sprintf(
+                    '%s: invalid or read only key `%s`',
+                    __METHOD__,
+                    $offset
+                )
+            );
+        }
+
+        $this->setArrayField($offset, $value);
+    }
+
+    /**
+     * (PHP 5 &gt;= 5.0.0)<br/>
+     * Offset to unset
+     * @link http://php.net/manual/en/arrayaccess.offsetunset.php
+     * @param mixed $offset <p>
+     * The offset to unset.
+     * </p>
+     * @return void
+     */
+    public function offsetUnset($offset)
+    {
+        if(!array_key_exists($offset, $this->lazyLoader))
+        {
+            throw new Exception\InvalidArgumentException(
+                sprintf(
+                    '%s: only removing of lazy load data available `%s`',
+                    __METHOD__,
+                    $offset
+                )
+            );
+        }
+
+        if(array_key_exists($offset, $this->lazyData))
+        {
+            unset($this->lazyData[$offset]);
+        }
     }
 }
