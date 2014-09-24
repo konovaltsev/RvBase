@@ -47,6 +47,23 @@ class ArrayEntityIdentityMap implements IdentityMapInterface
         return $this->getEntityFromMap($key);
     }
 
+    /**
+     * @param AbstractArrayEntity $entity
+     */
+    public function reset($entity)
+    {
+        if(!$entity instanceof AbstractArrayEntity)
+        {
+            throw new Exception\InvalidArgumentException('Entity must be an instance of AbstractArrayEntity');
+        }
+
+        $key = $this->getKey($entity->getArrayData());
+        if($this->exists($key))
+        {
+            $this->dropEntityFromMap($key);
+        }
+    }
+
     public function getKey($data)
     {
         if(!is_array($this->primaryKey))
@@ -54,7 +71,7 @@ class ArrayEntityIdentityMap implements IdentityMapInterface
             return $data[$this->primaryKey];
         }
 
-        return implode('__', array_intersect_key($data, $this->primaryKey));
+        return implode('___', array_intersect_key($data, $this->primaryKey));
     }
 
     public function exists($key)
@@ -83,5 +100,15 @@ class ArrayEntityIdentityMap implements IdentityMapInterface
             $key = $this->getKey($key);
         }
         return $this->map[$key];
+    }
+
+    protected function dropEntityFromMap($key)
+    {
+        if(is_array($key))
+        {
+            $key = $this->getKey($key);
+        }
+        unset($this->map[$key]);
+        return $this;
     }
 }

@@ -13,4 +13,11 @@ interface IdentityMapInterface
      * @return object
      */
     public function get($entity);
+
+    /**
+     * Drop entity from identity map
+     *
+     * @param $entity
+     */
+    public function reset($entity);
 }

@@ -33,6 +33,10 @@ class AbstractArrayEntityTable
         return $this->primaryKey;
     }
 
+    /**
+     * @param $id
+     * @return AbstractArrayEntity
+     */
     public function getEntity($id)
     {
         $entity = $this->findEntity($id);
@@ -41,7 +45,7 @@ class AbstractArrayEntityTable
             throw new Exception\RuntimeException(
                 sprintf(
                     'Could not find entity with id `%s` (%s)',
-                    $id,
+                    var_export($id, true),
                     get_class($this)
                 )
             );

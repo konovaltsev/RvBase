@@ -23,6 +23,8 @@ abstract class AbstractArrayEntityTableFactory implements FactoryInterface
 
     protected $adapterName = 'Zend\Db\Adapter\Adapter';
 
+    protected $tableClass;
+
     /**
      * Create service
      *
@@ -49,7 +51,10 @@ abstract class AbstractArrayEntityTableFactory implements FactoryInterface
      * @param ServiceLocatorInterface $serviceLocator
      * @return AbstractArrayEntityTable
      */
-    abstract protected function createTable(TableGateway $tableGateway, ServiceLocatorInterface $serviceLocator);
+    protected function createTable(TableGateway $tableGateway, ServiceLocatorInterface $serviceLocator)
+    {
+        return new $this->tableClass($tableGateway);
+    }
 
     protected function createTableGateway(ServiceLocatorInterface $serviceLocator)
     {
