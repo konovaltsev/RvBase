@@ -2,7 +2,7 @@
 
 namespace RvBase\Table;
 
-use RvBase\Entity\AbstractArrayEntity;
+use RvBase\Entity\ArrayEntity;
 
 /**
  * Class ArrayEntityIdentityMap
@@ -27,14 +27,14 @@ class ArrayEntityIdentityMap implements IdentityMapInterface
     }
 
     /**
-     * @param AbstractArrayEntity $entity
+     * @param ArrayEntity $entity
      * @return object
      */
     public function get($entity)
     {
-        if(!$entity instanceof AbstractArrayEntity)
+        if(!$entity instanceof ArrayEntity)
         {
-            throw new Exception\InvalidArgumentException('Entity must be an instance of AbstractArrayEntity');
+            throw new Exception\InvalidArgumentException('Entity must be an instance of ArrayEntity');
         }
 
         $key = $this->getKey($entity->getArrayData());
@@ -48,13 +48,13 @@ class ArrayEntityIdentityMap implements IdentityMapInterface
     }
 
     /**
-     * @param AbstractArrayEntity $entity
+     * @param ArrayEntity $entity
      */
     public function reset($entity)
     {
-        if(!$entity instanceof AbstractArrayEntity)
+        if(!$entity instanceof ArrayEntity)
         {
-            throw new Exception\InvalidArgumentException('Entity must be an instance of AbstractArrayEntity');
+            throw new Exception\InvalidArgumentException('Entity must be an instance of ArrayEntity');
         }
 
         $key = $this->getKey($entity->getArrayData());
@@ -83,7 +83,7 @@ class ArrayEntityIdentityMap implements IdentityMapInterface
         return isset($this->map[$key]);
     }
 
-    protected function storeEntityToMap($key, AbstractArrayEntity $entity)
+    protected function storeEntityToMap($key, ArrayEntity $entity)
     {
         if(is_array($key))
         {

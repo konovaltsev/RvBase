@@ -2,7 +2,7 @@
 
 namespace RvBase\Table;
 
-use RvBase\Entity\AbstractArrayEntity;
+use RvBase\Entity\ArrayEntity;
 use RvBase\Table\Exception;
 use Zend\Db\Sql\TableIdentifier;
 use Zend\Db\TableGateway\TableGateway;
@@ -35,7 +35,7 @@ class AbstractArrayEntityTable
 
     /**
      * @param $id
-     * @return AbstractArrayEntity
+     * @return ArrayEntity
      */
     public function getEntity($id)
     {
@@ -63,7 +63,7 @@ class AbstractArrayEntityTable
         return $rowSet->current();
     }
 
-    public function saveEntity(AbstractArrayEntity $entity)
+    public function saveEntity(ArrayEntity $entity)
     {
         $data = $entity->getArrayData();
 

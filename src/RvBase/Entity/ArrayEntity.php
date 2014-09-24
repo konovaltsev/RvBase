@@ -6,10 +6,10 @@ use Zend\InputFilter\InputFilterInterface;
 use ArrayAccess;
 
 /**
- * Class AbstractArrayEntity
+ * Class ArrayEntity
  * @package RvBase\Entity
  */
-abstract class AbstractArrayEntity implements ArrayAccess
+class ArrayEntity implements ArrayAccess
 {
     protected $data = array();
     protected $changed = array();
