@@ -15,6 +15,19 @@ return array(
             'default_acl' => 'acl',
         ),
 
+        'db' => array(
+            'tables' => array(
+                /*
+                'my_table' => array(
+                    'name' => 'my_table',
+                    'schema' => 'my_schema',
+                    'class' => 'MyModule\Table\MyTable'
+                    'db-adapter' => 'MyAnotherDbAdapter',
+                ),
+                */
+            ),
+        ),
+
         /*
         // time config example
         'time' => array(

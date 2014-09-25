@@ -125,7 +125,7 @@ class AbstractArrayEntityTable
         $table = $this->getTable();
         if($table instanceof TableIdentifier)
         {
-            return $table->getTable();
+            return $table->getSchema() . $this->getIdentifierSeparator() . $table->getTable();
         }
         return $table;
     }
