@@ -125,7 +125,7 @@ class AbstractArrayEntityTable
         $table = $this->getTable();
         if($table instanceof TableIdentifier)
         {
-            return $table->getSchema() . $this->getIdentifierSeparator() . $table->getTable();
+            return $table->getTable();
         }
         return $table;
     }
@@ -133,7 +133,7 @@ class AbstractArrayEntityTable
     /**
      * @return string
      */
-    public function getSchemaTableName()
+    public function getTableFullName()
     {
         $table = $this->getTable();
         if($table instanceof TableIdentifier)
@@ -152,9 +152,9 @@ class AbstractArrayEntityTable
         return $this->getTableGateway()->getAdapter()->getPlatform()->getIdentifierSeparator();
     }
 
-    public function getTableColumnName($columnName)
+    public function getColumnFullName($columnName)
     {
-        return $this->getTableName() . $this->getIdentifierSeparator() . $columnName;
+        return $this->getTableFullName() . $this->getIdentifierSeparator() . $columnName;
     }
 
     protected function getIdFieldsFromData($data)
@@ -171,7 +171,7 @@ class AbstractArrayEntityTable
         $id = array();
         foreach($primary as $field)
         {
-            $id[$field] = $data[$field];
+            $id[$this->getColumnFullName($field)] = $data[$field];
         }
         return $id;
     }
