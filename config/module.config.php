@@ -29,6 +29,44 @@ return array(
         ),
 
         /*
+        // Mail config example
+        'mail' => array(
+            'transports' => array(
+                'mail.transport.default' => array(
+                    'type' => 'smtp',
+                    'options' => array(
+                        'host' => 'example.com',
+                        'connection_class'  => 'plain',
+                        'connection_config' => array(
+                            'username' => 'noreply@example.com',
+                            'password' => 'dummy password',
+                        ),
+                    ),
+                ),
+            ),
+            'messages' => array(
+                'options' => array(
+                    'defaults' => array(
+                        'encoding' => 'UTF-8',
+                        'content_charset' => 'UTF-8',
+                        'content_type' => \Zend\Mime\Mime::TYPE_HTML,
+                        'content_encoding' => \Zend\Mime\Mime::ENCODING_BASE64,
+                    ),
+                ),
+            ),
+            'addresses' => array(
+                'from' => array(
+                    'noreply@example.com' => 'Example Mail Bot',
+                ),
+                'admin' => array(
+                    'admin1@example.com' => 'First Admin',
+                    'developer@another-example.com' => 'Second Admin',
+                ),
+            ),
+        ),
+        */
+
+        /*
         // time config example
         'time' => array(
             'current' => array(
@@ -46,44 +84,6 @@ return array(
         ),
         */
     ),
-
-    /*
-    // Mail config example
-    'mail' => array(
-        'transports' => array(
-            'mail.transport.default' => array(
-                'type' => 'smtp',
-                'options' => array(
-                    'host' => 'example.com',
-                    'connection_class'  => 'plain',
-                    'connection_config' => array(
-                        'username' => 'noreply@example.com',
-                        'password' => 'dummy password',
-                    ),
-                ),
-            ),
-        ),
-        'messages' => array(
-            'options' => array(
-                'defaults' => array(
-                    'encoding' => 'UTF-8',
-                    'content_charset' => 'UTF-8',
-                    'content_type' => \Zend\Mime\Mime::TYPE_HTML,
-                    'content_encoding' => \Zend\Mime\Mime::ENCODING_BASE64,
-                ),
-            ),
-        ),
-        'addresses' => array(
-            'from' => array(
-                'noreply@example.com' => 'Example Mail Bot',
-            ),
-            'admin' => array(
-                'admin1@example.com' => 'First Admin',
-                'developer@another-example.com' => 'Second Admin',
-            ),
-        ),
-    ),
-    */
 
     'controller_plugins' => array(
 		'invokables' => array(

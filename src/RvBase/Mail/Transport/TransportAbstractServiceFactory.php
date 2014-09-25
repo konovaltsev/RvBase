@@ -67,24 +67,32 @@ class TransportAbstractServiceFactory implements AbstractFactoryInterface
             $this->config = array();
             return $this->config;
         }
-
         $config = $services->get('Config');
+
+        if (!isset($config['rv-base'])
+            || !is_array($config['rv-base'])
+        ) {
+            $this->config = array();
+            return $this->config;
+        }
+        $config = $config['rv-base'];
+
         if (!isset($config['mail'])
             || !is_array($config['mail'])
         ) {
             $this->config = array();
             return $this->config;
         }
-
         $config = $config['mail'];
+
         if (!isset($config['transports'])
             || !is_array($config['transports'])
         ) {
             $this->config = array();
             return $this->config;
         }
-
         $this->config = $config['transports'];
+
         return $this->config;
     }
 }

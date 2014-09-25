@@ -50,13 +50,21 @@ class AddressProviderServiceFactory implements FactoryInterface
         }
 
         $config = $serviceLocator->get('Config');
+
+        if (!isset($config['rv-base'])
+            || !is_array($config['rv-base'])
+        ) {
+            return array();
+        }
+        $config = $config['rv-base'];
+
         if (!isset($config['mail'])
             || !is_array($config['mail'])
         ) {
             return array();
         }
-
         $config = $config['mail'];
+
         if (!isset($config['addresses'])
             || !is_array($config['addresses'])
         ) {
