@@ -27,6 +27,9 @@ class NotAllowed extends AbstractPlugin
 		return $this->getModel();
 	}
 
+    /**
+     * @return ConsoleModel|ViewModel
+     */
 	public function getModel()
 	{
 		$response   = $this->getResponse();

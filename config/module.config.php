@@ -15,6 +15,71 @@ return array(
             'default_acl' => 'acl',
         ),
 
+        'permissions' => array(
+            'acl' => array(
+                /*
+                'roles' => array(
+                ),
+                'resources' => array(
+                ),
+                'rules' => array(
+                ),
+                'initializers' => array(
+                    'roles' => array(
+                        'RvBase\ServiceFactory\Acl\RolesConfigInitializer',
+                    ),
+                    'resources' => array(
+                        'RvBase\ServiceFactory\Acl\ResourcesConfigInitializer',
+                    ),
+                    'rules' => array(
+                        'RvBase\ServiceFactory\Acl\RulesConfigInitializer',
+                    ),
+                ),
+
+                'parent_roles_providers' => array(
+                    array(
+                        'class' => 'MyRolesProviderInvokable',
+                        'priority' => 1,
+                    ),
+                    array(
+                        'service' => 'my.parent.roles.provider.service',
+                        'priority' => 2,
+                    ),
+                ),
+                */
+
+                'identity_role_provider' => 'rv-base.permissions.acl.identity-role-provider',
+                'identity_parent_roles_provider' => 'rv-base.permissions.acl.identity-parent-roles-provider',
+                'identity_role_initializer' => 'rv-base.permissions.acl.identity-role-initializer',
+
+                /*
+                // For true init_authenticated_identity_role
+                'authentication_service' => 'rv-base.authentication',
+                */
+                'init_authenticated_identity_role' => false,
+
+                /*
+                // Resources providers
+                'resource_providers' => array(
+                    array(
+                        'class' => 'My\Provider1',
+                    ),
+                    array(
+                        'service' => 'my.provider1',
+                    ),
+                ),
+                'object_resource_providers' => array(
+                    'My\Some\Entity' => array(
+                        'class' => 'My\Some\Entity\Provider',
+                    ),
+                    'My\Another\Entity' => array(
+                        'service' => 'my.another.entity.provider.service',
+                    ),
+                ),
+                 */
+            ),
+        ),
+
         'db' => array(
             'tables' => array(
                 /*
@@ -87,7 +152,7 @@ return array(
 
     'controller_plugins' => array(
 		'invokables' => array(
-			'notallowed' => 'RvBase\Mvc\Controller\Plugin\NotAllowed',
+			'notAllowed' => 'RvBase\Mvc\Controller\Plugin\NotAllowed',
 		),
 	),
 
@@ -98,6 +163,14 @@ return array(
             'rv-base.mail.addresses' => 'RvBase\Mail\AddressProviderServiceFactory',
             'rv-base.mail.messages' => 'RvBase\Mail\MessageProviderServiceFactory',
             'rv-base.mailer' => 'RvBase\Mail\MailerServiceFactory',
+            'rv-base.permissions.acl.identity-parent-roles-provider'
+                => 'RvBase\ServiceFactory\Acl\IdentityRoleParentsProviderFactory',
+            'rv-base.permissions.acl.identity-role-initializer'
+                => 'RvBase\ServiceFactory\Acl\IdentityRoleInitializerServiceFactory',
+            'rv-base.permissions.acl.resource-initializer'
+                => 'RvBase\ServiceFactory\Acl\ResourceInitializerServiceFactory',
+            'rv-base.permissions.acl.resource-provider'
+                => 'RvBase\ServiceFactory\Acl\ResourceProviderChainServiceFactory',
 			'rv-base.time.current' => 'RvBase\DateTime\Service\CurrentTime\TimeProviderFactory',
 			'rv-base.time.current.source.db-adapter' => 'RvBase\DateTime\Service\CurrentTime\Source\DbAdapterSourceFactory',
 			'rv-base.time.request' => 'RvBase\DateTime\Service\RequestTime\RequestTimeProviderFactory',
@@ -105,6 +178,9 @@ return array(
             'rv-base.view-manager' => 'RvBase\Mvc\Service\ViewManagerFactory',
 		),
 		'invokables' => array(
+            /*
+            'rv-base.permissions.acl.identity-role-provider' => 'MyModule\Permissions\Acl\Role\IdentityRoleProvider',
+             */
 		),
     ),
 );
