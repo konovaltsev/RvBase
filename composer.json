@@ -19,7 +19,7 @@
                 "name": "emuravjev/mdash",
                 "version":"master",
                 "source": {
-                    "url": "https://github.com/emuravjev/mdash.git",
+                    "url": "http://github.com/emuravjev/mdash",
                     "type": "git",
                     "reference":"master"
                 }
