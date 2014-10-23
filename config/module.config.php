@@ -148,6 +148,17 @@ return array(
             ),
         ),
         */
+
+        'typograph' => array(
+            'driver' => array(
+                'name' => 'mdash',
+                'options' => array(
+                    'path' => __DIR__ . '/../',
+                    'mdash' => array(
+                    ),
+                ),
+            ),
+        ),
     ),
 
     'controller_plugins' => array(

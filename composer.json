@@ -14,6 +14,18 @@
     ],
     "repositories": [
         {
+            "type":"package",
+            "package": {
+                "name": "emuravjev/mdash",
+                "version":"master",
+                "source": {
+                    "url": "https://github.com/emuravjev/mdash.git",
+                    "type": "git",
+                    "reference":"master"
+                }
+            }
+        },
+        {
             "type": "composer",
             "url": "https://packages.zendframework.com/"
         }
