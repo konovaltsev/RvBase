@@ -17,11 +17,27 @@
             "type":"package",
             "package": {
                 "name": "emuravjev/mdash",
-                "version":"master",
+                "version": "master",
                 "source": {
                     "url": "http://github.com/emuravjev/mdash",
                     "type": "git",
+                    "reference": "master"
+                }
+            }
+        },
+        {
+            "type":"package",
+            "package":{
+                "name":"pqr/superlib",
+                "version":"1.2.3",
+                "source":{
+                    "type":"git",
+                    "url":"http://github.com/pqr/superlib",
                     "reference":"master"
+                },
+                "autoload":{
+                    "classmap":["timer.php"],
+                    "files":["lib_functions.php"]
                 }
             }
         },
@@ -43,10 +59,12 @@
         "zendframework/zend-permissions-acl": "~2.3",
         "zendframework/zend-stdlib": "~2.3",
         "emuravjev/mdash": "master",
+        "pqr/superlib":"1.2.3",
         "php":                       ">=5.4.0"
     },
     "require-dev": {
         "zendframework/zendframework": "~2.3",
+        "pqr/superlib":"1.2.3",
         "emuravjev/mdash": "master"
     }
 }
