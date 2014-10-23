@@ -51,7 +51,6 @@
             "RvBase\\": "src/"
         }
     },
-    "minimum-stability": "dev",
     "require": {
         "zendframework/zend-db":     "~2.3",
         "zendframework/zend-mvc": "~2.3",
