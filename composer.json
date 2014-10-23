@@ -42,9 +42,11 @@
         "zendframework/zend-navigation": "~2.3",
         "zendframework/zend-permissions-acl": "~2.3",
         "zendframework/zend-stdlib": "~2.3",
+        "emuravjev/mdash": "master",
         "php":                       ">=5.4.0"
     },
     "require-dev": {
-        "zendframework/zendframework": "~2.3"
+        "zendframework/zendframework": "~2.3",
+        "emuravjev/mdash": "master"
     }
 }
