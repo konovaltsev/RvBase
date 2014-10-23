@@ -17,11 +17,11 @@
             "type":"package",
             "package": {
                 "name": "emuravjev/mdash",
-                "version":"123",
+                "version":"master",
                 "source": {
                     "url": "https://github.com/emuravjev/mdash.git",
                     "type": "git",
-                    "reference":"r123"
+                    "reference":"master"
                 }
             }
         },
@@ -42,11 +42,10 @@
         "zendframework/zend-navigation": "~2.3",
         "zendframework/zend-permissions-acl": "~2.3",
         "zendframework/zend-stdlib": "~2.3",
-        "emuravjev/mdash": "123",
         "php":                       ">=5.4.0"
     },
     "require-dev": {
         "zendframework/zendframework": "~2.3",
-        "emuravjev/mdash": "123"
+        "emuravjev/mdash": "master"
     }
 }
