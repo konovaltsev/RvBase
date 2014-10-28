@@ -16,10 +16,10 @@
         {
             "type":"package",
             "package": {
-                "name": "emuravjev/mdash",
+                "name": "emuravjevv/mdash",
                 "version": "master",
                 "source": {
-                    "url": "http://github.com/emuravjev/mdash",
+                    "url": "http://github.com/emuravjevv/mdash",
                     "type": "git",
                     "reference": "master"
                 }
