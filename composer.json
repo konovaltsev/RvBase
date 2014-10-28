@@ -14,6 +14,18 @@
     ],
     "repositories": [
         {
+            "type":"package",
+            "package": {
+                "name": "emuravjev/mdash",
+                "version": "master",
+                "source": {
+                    "url": "http://github.com/emuravjev/mdash",
+                    "type": "git",
+                    "reference": "master"
+                }
+            }
+        },
+        {
             "type": "composer",
             "url": "https://packages.zendframework.com/"
         }
@@ -25,6 +37,7 @@
     },
     "minimum-stability": "dev",
     "require": {
+        "emuravjev/mdash": "dev-master",
         "zendframework/zend-db":     "~2.3",
         "zendframework/zend-mvc": "~2.3",
         "zendframework/zend-navigation": "~2.3",
@@ -33,6 +46,7 @@
         "php":                       ">=5.4.0"
     },
     "require-dev": {
+        "emuravjev/mdash": "dev-master",
         "zendframework/zendframework": "~2.3"
     }
 }
