@@ -27,9 +27,9 @@
             "RvBase\\": "src/"
         }
     },
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "require": {
-        "konovaltsev/mdash": "1.0.0",
+        "konovaltsev/mdash": "~1.0",
         "zendframework/zend-db":     "~2.3",
         "zendframework/zend-mvc": "~2.3",
         "zendframework/zend-navigation": "~2.3",
@@ -38,12 +38,11 @@
         "php":                       ">=5.4.0"
     },
     "require-dev": {
-        "konovaltsev/mdash": "dev-master",
-        "zendframework/zendframework": "*"
+        "zendframework/zendframework": "~2.3"
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.1-dev"
+            "dev-master": "1.0-dev"
         }
     }
 }
