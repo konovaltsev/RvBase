@@ -48,5 +48,10 @@
     "require-dev": {
         "emuravjev/mdash": "dev-master",
         "zendframework/zendframework": "~2.3"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.1.x-dev"
+        }
     }
 }
