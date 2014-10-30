@@ -14,22 +14,6 @@
     ],
     "repositories": [
         {
-            "type":"package",
-            "package": {
-                "name": "emuravjev/mdash",
-                "version": "dev-master-ef22931",
-                "source": {
-                    "url": "https://github.com/emuravjev/mdash.git",
-                    "type": "git",
-                    "reference": "ef229316648197e38740acebbd7f4a48fe347487"
-                },
-                "dist": {
-                    "url": "https://github.com/emuravjev/mdash/archive/ef229316648197e38740acebbd7f4a48fe347487.zip",
-                    "type": "zip"
-                }
-            }
-        },
-        {
             "type": "composer",
             "url": "https://packages.zendframework.com/"
         }
@@ -41,16 +25,8 @@
     },
     "minimum-stability": "dev",
     "require": {
-        "emuravjev/mdash": "*",
-        "zendframework/zend-db":     "~2.3",
-        "zendframework/zend-mvc": "~2.3",
-        "zendframework/zend-navigation": "~2.3",
-        "zendframework/zend-permissions-acl": "~2.3",
-        "zendframework/zend-stdlib": "~2.3",
+        "zendframework/zendframework": "~2.3",
         "php":                       ">=5.4.0"
-    },
-    "require-dev": {
-        "zendframework/zendframework": "~2.3"
     },
     "extra": {
         "branch-alias": {
