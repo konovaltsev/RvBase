@@ -29,7 +29,7 @@
     },
     "minimum-stability": "dev",
     "require": {
-        "konovaltsev/mdash": "dev-master",
+        "konovaltsev/mdash": "~1.0",
         "zendframework/zend-db":     "~2.3",
         "zendframework/zend-mvc": "~2.3",
         "zendframework/zend-navigation": "~2.3",
