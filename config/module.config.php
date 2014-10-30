@@ -153,7 +153,7 @@ return array(
             'driver' => array(
                 'name' => 'mdash',
                 'options' => array(
-                    'path' => __DIR__ . '/../',
+                    'path' => __DIR__ . '/../libs/emuravjev/mdash',
                     'mdash' => array(
                     ),
                 ),
