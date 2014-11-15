@@ -26,7 +26,8 @@
     "minimum-stability": "dev",
     "require": {
         "zendframework/zendframework": "~2.3",
-        "php":                       ">=5.4.0"
+        "ezyang/htmlpurifier":         "~4.6",
+        "php":                         ">=5.4.0"
     },
     "extra": {
         "branch-alias": {

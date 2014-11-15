@@ -148,17 +148,6 @@ return array(
             ),
         ),
         */
-
-        'typograph' => array(
-            'driver' => array(
-                'name' => 'mdash',
-                'options' => array(
-                    'path' => __DIR__ . '/../libs/emuravjev/mdash',
-                    'mdash' => array(
-                    ),
-                ),
-            ),
-        ),
     ),
 
     'controller_plugins' => array(
@@ -193,5 +182,11 @@ return array(
             'rv-base.permissions.acl.identity-role-provider' => 'MyModule\Permissions\Acl\Role\IdentityRoleProvider',
              */
 		),
+    ),
+
+    'filters' => array(
+        'invokables' => array(
+            'EmTypograph' => 'RvBase\Filter\EmTypograph',
+        ),
     ),
 );

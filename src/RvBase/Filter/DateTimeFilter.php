@@ -1,6 +1,8 @@
 <?php
 
 namespace RvBase\Filter;
+
+use DateTime;
 use Zend\Filter\AbstractFilter;
 use Zend\Filter\Exception;
 
@@ -15,7 +17,7 @@ class DateTimeFilter extends AbstractFilter
      *
      * @param  mixed $value
      * @throws Exception\RuntimeException If filtering $value is impossible
-     * @return mixed
+     * @return DateTime|mixed
      */
     public function filter($value)
     {
@@ -37,7 +39,7 @@ class DateTimeFilter extends AbstractFilter
      * Normalize the provided value to a formatted string
      *
      * @param  string|int|\DateTime $value
-     * @return string
+     * @return DateTime
      */
     protected function normalizeDateTime($value)
     {
@@ -51,13 +53,12 @@ class DateTimeFilter extends AbstractFilter
 
         if (is_int($value)) {
             //timestamp
-            $value = new \DateTime('@' . $value);
+            $value = new DateTime('@' . $value);
         }
         elseif (!$value instanceof \DateTime) {
-            $value = new \DateTime($value);
+            $value = new DateTime($value);
         }
 
         return $value;
     }
-
 }
