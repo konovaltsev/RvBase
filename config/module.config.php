@@ -187,6 +187,7 @@ return array(
     'filters' => array(
         'invokables' => array(
             'EmTypograph' => 'RvBase\Filter\EmTypograph',
+            'HtmlPurifier' => 'RvBase\Filter\HtmlPurifier',
         ),
     ),
 );
