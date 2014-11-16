@@ -10,6 +10,9 @@ return array(
             'enabled' => true,
         ),
 
+        'filter_helpers' => array(
+        ),
+
         'acl' => array(
             'default_role' => 'current_user',
             'default_acl' => 'acl',
