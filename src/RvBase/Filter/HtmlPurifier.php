@@ -17,10 +17,28 @@ class HtmlPurifier extends AbstractFilter
     protected $config = array();
     protected $schema = null;
     protected $initialized = false;
+    protected $initDefaultUriHost = false;
+    protected static $defaultUriHost = null;
 
     public function __construct($options = array())
     {
         $this->setOptions($options);
+    }
+
+    /**
+     * @return null
+     */
+    public static function getDefaultUriHost()
+    {
+        return self::$defaultUriHost;
+    }
+
+    /**
+     * @param null $defaultUriHost
+     */
+    public static function setDefaultUriHost($defaultUriHost)
+    {
+        self::$defaultUriHost = $defaultUriHost;
     }
 
     /**
@@ -62,6 +80,24 @@ class HtmlPurifier extends AbstractFilter
     }
 
     /**
+     * @return boolean
+     */
+    public function isInitDefaultUriHost()
+    {
+        return $this->initDefaultUriHost;
+    }
+
+    /**
+     * @param boolean $initUriHost
+     * @return HtmlPurifier
+     */
+    public function setInitDefaultUriHost($initUriHost)
+    {
+        $this->initDefaultUriHost = (boolean)$initUriHost;
+        return $this;
+    }
+
+    /**
      * @param \HTMLPurifier $purifier
      * @return $this
      */
@@ -96,7 +132,14 @@ class HtmlPurifier extends AbstractFilter
     protected function createPurifier()
     {
         $config = \HTMLPurifier_Config::create($this->config, $this->schema);
+
+        if($this->isInitDefaultUriHost())
+        {
+            $config->set('URI.Host', self::getDefaultUriHost());
+        }
+
         $purifier = new \HTMLPurifier($config);
+
         return $purifier;
     }
 }

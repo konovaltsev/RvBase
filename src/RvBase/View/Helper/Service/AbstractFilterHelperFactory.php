@@ -3,6 +3,7 @@
 namespace RvBase\View\Helper\Service;
 
 use RvBase\View\Helper\FilterHelper;
+use Zend\Cache\Storage\StorageInterface;
 use Zend\Filter\FilterChain;
 use Zend\Filter\FilterInterface;
 use Zend\Filter\FilterPluginManager;
@@ -32,20 +33,32 @@ class AbstractFilterHelperFactory implements FactoryInterface
 
         if(array_key_exists('name', $filtersConfig))
         {
-            return $this->createHelper($this->getFilter($serviceLocator, $filtersConfig));
+            $helper = $this->createHelper($this->getFilter($serviceLocator, $filtersConfig));
         }
-
-        if(array_key_exists('chain', $filtersConfig))
+        elseif(array_key_exists('chain', $filtersConfig))
         {
-            return $this->createHelper($this->getFilterChain($serviceLocator, $filtersConfig['chain']));
+            $helper = $this->createHelper($this->getFilterChain($serviceLocator, $filtersConfig['chain']));
+        }
+        else
+        {
+            throw new Exception\ServiceNotCreatedException(
+                sprintf(
+                    'Invalid config for `%s` filter view helper',
+                    $this->configKey
+                )
+            );
         }
 
-        throw new Exception\ServiceNotCreatedException(
-            sprintf(
-                'Invalid config for `%s` filter view helper',
-                $this->configKey
-            )
-        );
+        if(array_key_exists('cache', $filtersConfig))
+        {
+            $helper->setCacheStorage($this->getCacheStorage($serviceLocator, $filtersConfig));
+        }
+        if(array_key_exists('cache_tags', $filtersConfig))
+        {
+            $helper->setCacheTags($filtersConfig['cache_tags']);
+        }
+
+        return $helper;
     }
 
     /**
@@ -75,6 +88,26 @@ class AbstractFilterHelperFactory implements FactoryInterface
         $helper = new FilterHelper();
         $helper->setFilter($filter);
         return $helper;
+    }
+
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     * @param array $config
+     * @return StorageInterface
+     */
+    protected function getCacheStorage(ServiceLocatorInterface $serviceLocator, array $config)
+    {
+        if($serviceLocator instanceof ServiceLocatorAwareInterface)
+        {
+            $serviceLocator = $serviceLocator->getServiceLocator();
+        }
+
+        if(array_key_exists('cache', $config))
+        {
+            return $serviceLocator->get($config['cache']);
+        }
+
+        return null;
     }
 
     /**
