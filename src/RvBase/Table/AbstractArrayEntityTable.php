@@ -63,6 +63,12 @@ class AbstractArrayEntityTable
         return $rowSet->current();
     }
 
+	/**
+	 * Update
+	 *
+	 * @param ArrayEntity $entity
+	 * @return int
+	 */
     public function saveEntity(ArrayEntity $entity)
     {
         $data = $entity->getArrayData();
@@ -72,7 +78,7 @@ class AbstractArrayEntityTable
         $data = array_intersect_key($data, $entity->getArrayChangedFields());
         if(empty($data))
         {
-            return $this;
+            return 0;
         }
 
         $result = $this->getTableGateway()->update(
@@ -84,6 +90,40 @@ class AbstractArrayEntityTable
 
         return $result;
     }
+
+	/**
+	 * Create
+	 *
+	 * @param $data
+	 * @return ArrayEntity
+	 */
+	public function createEntity($data)
+	{
+		if(empty($data) || !is_array($data))
+		{
+			throw new Exception\InvalidArgumentException('Data is empty or not array');
+		}
+
+		$tableGateway = $this->getTableGateway();
+		$result = $tableGateway->insert($data);
+		if(empty($result))
+		{
+			throw new Exception\RuntimeException('Data not inserted');
+		}
+
+		$primaryKey = $this->getPrimaryKey();
+		if(!is_array($primaryKey))
+		{
+			$lastInsertValue = $tableGateway->getLastInsertValue();
+			if(!empty($lastInsertValue))
+			{
+				$data[$primaryKey] = $lastInsertValue;
+			}
+		}
+
+		$id = $this->getIdFieldsFromData($data);
+		return $this->getEntity($id);
+	}
 
     /**
      * @return TableGateway
