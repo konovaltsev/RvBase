@@ -60,6 +60,7 @@ class AbstractArrayEntityTable
             return $this->identityMap->getEntityFromMap($id);
         }
         $rowSet = $this->getTableGateway()->select($this->getIdFieldsFromData($id));
+
         return $rowSet->current();
     }
 
@@ -112,6 +113,10 @@ class AbstractArrayEntityTable
 		}
 
 		$primaryKey = $this->getPrimaryKey();
+        if(is_array($primaryKey) && count($primaryKey) == 1)
+        {
+            $primaryKey = array_pop($primaryKey);
+        }
 		if(!is_array($primaryKey))
 		{
 			$lastInsertValue = $tableGateway->getLastInsertValue();
@@ -121,8 +126,9 @@ class AbstractArrayEntityTable
 			}
 		}
 
-		$id = $this->getIdFieldsFromData($data);
-		return $this->getEntity($id);
+        $entity = $this->getEntity($data);
+
+        return $entity;
 	}
 
     /**
