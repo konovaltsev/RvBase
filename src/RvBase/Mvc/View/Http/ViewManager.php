@@ -56,7 +56,7 @@ class ViewManager
     }
 
     /**
-     * Instantiates and configures the "route not allowed", or 404, strategy
+     * Instantiates and configures the "route not allowed", or 403, strategy
      *
      * @return RouteNotAllowedStrategy
      */
