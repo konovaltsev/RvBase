@@ -72,8 +72,7 @@ class AbstractArrayEntityTable
 	 */
     public function saveEntity(ArrayEntity $entity)
     {
-        $data = $entity->getArrayData();
-
+        $data    = $entity->getArrayData();
         $primary = $this->getIdFieldsFromData($data);
 
         $data = array_intersect_key($data, $entity->getArrayChangedFields());
@@ -92,7 +91,26 @@ class AbstractArrayEntityTable
         return $result;
     }
 
-	/**
+    /**
+     * @param ArrayEntity $entity
+     * @return int
+     */
+    public function deleteEntity(ArrayEntity $entity)
+    {
+        $data    = $entity->getArrayData();
+        $primary = $this->getIdFieldsFromData($data);
+
+        $result = $this->getTableGateway()->delete($primary);
+
+        if($this->identityMap instanceof ArrayEntityIdentityMap)
+        {
+            $this->identityMap->reset($entity);
+        }
+
+        return $result;
+    }
+
+    /**
 	 * Create
 	 *
 	 * @param $data
