@@ -35,7 +35,7 @@ class InjectTemplateFromRouteListener extends AbstractListenerAggregate
         if (!$model instanceof ViewModel) {
             return;
         }
-        $template = $model->getTemplate(); var_dump($model->getTemplate());
+        $template = $model->getTemplate();
         if (!empty($template)) {
             return;
         }
