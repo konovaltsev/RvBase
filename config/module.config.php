@@ -181,6 +181,7 @@ return array(
             'rv-base.view-manager' => 'RvBase\Mvc\Service\ViewManagerFactory',
 		),
 		'invokables' => array(
+            'rv-base.inject-template-from-route-listener' => 'RvBase\View\Http\InjectTemplateFromRouteListener',
             /*
             'rv-base.permissions.acl.identity-role-provider' => 'MyModule\Permissions\Acl\Role\IdentityRoleProvider',
              */

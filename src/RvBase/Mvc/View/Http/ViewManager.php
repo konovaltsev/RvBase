@@ -1,6 +1,8 @@
 <?php
 
 namespace RvBase\Mvc\View\Http;
+
+use RvBase\View\Http\InjectTemplateFromRouteListener;
 use Zend\Mvc\MvcEvent;
 use Zend\ServiceManager\ServiceManager;
 use ArrayAccess;
@@ -49,10 +51,12 @@ class ViewManager
         $this->event    = $event;
 
         $routeNotAllowedStrategy   = $this->getRouteNotAllowedStrategy();
+        $injectTemplateListener  = $this->getInjectTemplateListener();
 
         $events->attach($routeNotAllowedStrategy);
 
-        $sharedEvents->attach('Zend\Stdlib\DispatchableInterface', MvcEvent::EVENT_DISPATCH, array($routeNotAllowedStrategy, 'prepareNotAllowedViewModel'), -90);
+        $sharedEvents->attach('Zend\Stdlib\DispatchableInterface', MvcEvent::EVENT_DISPATCH, [$routeNotAllowedStrategy, 'prepareNotAllowedViewModel'], -90);
+        $sharedEvents->attach('Zend\Stdlib\DispatchableInterface', MvcEvent::EVENT_DISPATCH, [$injectTemplateListener, 'injectTemplate'], -85);
     }
 
     /**
@@ -92,5 +96,13 @@ class ViewManager
         $this->services->setAlias('403Strategy', 'RouteNotAllowedStrategy');
 
         return $this->routeNotAllowedStrategy;
+    }
+
+    /**
+     * @return InjectTemplateFromRouteListener
+     */
+    public function getInjectTemplateListener()
+    {
+        return $this->services->get('rv-base.inject-template-from-route-listener');
     }
 }

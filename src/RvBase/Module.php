@@ -2,9 +2,10 @@
 
 namespace RvBase;
 
+use RvBase\Mvc\DispatchListener;
+use RvBase\Mvc\View\Http\ViewManager;
 use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\Feature;
-
 use Zend\Navigation\Page\AbstractPage;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -36,10 +37,9 @@ class Module
         $applicationEventManager = $application->getEventManager();
 
         $config = $serviceManager->get('Config');
-        if($config['rv-base']['view-manager']['enabled'] === true && $serviceManager->has('rv-base.view-manager'))
+        if($config['rv-base']['view-manager']['enabled'] === true)
         {
-            /** @var \RvBase\Mvc\View\Http\ViewManager $rvViewManager */
-            $rvViewManager = $serviceManager->get('rv-base.view-manager');
+            $rvViewManager = $this->getViewManager($serviceManager);
             if($rvViewManager)
             {
                 $rvViewManager->onBootstrap($e);
@@ -48,8 +48,7 @@ class Module
 
         if($config['rv-base']['dispatch-listener']['enabled'] === true)
         {
-            /** @var \RvBase\Mvc\View\Http\ViewManager $rvViewManager */
-            $applicationEventManager->attachAggregate($serviceManager->get('rv-base.dispatch-listener'));
+            $applicationEventManager->attachAggregate($this->getDispatchListener($serviceManager));
         }
 
         $this->initNavigationPageFactories($serviceManager);
@@ -70,5 +69,28 @@ class Module
                 return $pageFactory->createPage($options);
             }
         );
+    }
+
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     * @return ViewManager
+     */
+    private function getViewManager(ServiceLocatorInterface $serviceLocator)
+    {
+        if($serviceLocator->has('rv-base.view-manager'))
+        {
+            return $serviceLocator->get('rv-base.view-manager');
+        }
+
+        return null;
+    }
+
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     * @return DispatchListener
+     */
+    private function getDispatchListener(ServiceLocatorInterface $serviceLocator)
+    {
+        return $serviceLocator->get('rv-base.dispatch-listener');
     }
 }
