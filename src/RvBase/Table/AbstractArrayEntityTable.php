@@ -4,7 +4,9 @@ namespace RvBase\Table;
 
 use RvBase\Entity\ArrayEntity;
 use RvBase\Table\Exception;
+use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\Sql\TableIdentifier;
+use Zend\Db\Sql\Where;
 use Zend\Db\TableGateway\TableGateway;
 
 /**
@@ -62,6 +64,26 @@ class AbstractArrayEntityTable
         $rowSet = $this->getTableGateway()->select($this->getIdFieldsFromData($id));
 
         return $rowSet->current();
+    }
+
+    /**
+     * @param Where|\Closure|string|array $where
+     * @return \RvBase\Entity\ArrayEntity[]
+     */
+    public function findEntities($where)
+    {
+        return $this->performResultSet(
+            $this->tableGateway->select($where)
+        );
+    }
+
+    /**
+     * @param ResultSet $resultSet
+     * @return ArrayEntity[]
+     */
+    protected function performResultSet(ResultSet $resultSet)
+    {
+        return iterator_to_array($resultSet);
     }
 
 	/**
