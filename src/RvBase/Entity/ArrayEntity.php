@@ -85,13 +85,7 @@ class ArrayEntity implements ArrayAccess
      */
     public function toArray()
     {
-        $lazyData = [];
-
-        foreach ($this->lazyLoader as $lazyField => $callback) {
-            $lazyData[$lazyField] = $this->getLazyField($lazyField);
-        }
-
-        return array_merge($this->data, $lazyData);
+        return array_merge($this->data, $this->lazyData);
     }
 
     public function exchangeArray($data)
