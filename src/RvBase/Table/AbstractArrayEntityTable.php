@@ -6,8 +6,9 @@ use RvBase\Entity\ArrayEntity;
 use RvBase\Table\Exception;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\Sql\TableIdentifier;
-use Zend\Db\Sql\Where;
 use Zend\Db\TableGateway\TableGateway;
+use Zend\Paginator\Adapter\DbSelect;
+use Zend\Paginator\Paginator;
 
 /**
  * Class AbstractArrayTableGatewayService
@@ -67,23 +68,32 @@ class AbstractArrayEntityTable
     }
 
     /**
-     * @param Where|\Closure|string|array $where
-     * @return \RvBase\Entity\ArrayEntity[]
+     * @param            $where
+     * @param bool|false $paginated
+     * @return ResultSet|Paginator
      */
-    public function findEntities($where)
+    public function find($where, $paginated = false)
     {
-        return $this->performResultSet(
-            $this->tableGateway->select($where)
-        );
-    }
+        $tableGateway = $this->getTableGateway();
 
-    /**
-     * @param ResultSet $resultSet
-     * @return ArrayEntity[]
-     */
-    protected function performResultSet(ResultSet $resultSet)
-    {
-        return iterator_to_array($resultSet);
+        if ($paginated) {
+            $sql    = $this->getSql();
+            $select = $sql->select();
+
+            if ($where instanceof \Closure) {
+                $where($select);
+            } elseif ($where !== null) {
+                $select->where($where);
+            }
+
+            $resultSetPrototype = $tableGateway->getResultSetPrototype();
+            $paginatorAdapter   = new DbSelect($select, $sql, $resultSetPrototype);
+            $paginator          = new Paginator($paginatorAdapter);
+
+            return $paginator;
+        }
+
+        return $tableGateway->select($where);
     }
 
 	/**
@@ -241,6 +251,16 @@ class AbstractArrayEntityTable
     public function getColumnFullName($columnName)
     {
         return $this->getTableFullName() . $this->getIdentifierSeparator() . $columnName;
+    }
+
+    public function getQuotedColumnFullName($columnName)
+    {
+        return $this->getAdapter()->getPlatform()->quoteIdentifierChain(
+            explode(
+                '.',
+                $this->getColumnFullName($columnName)
+            )
+        );
     }
 
     protected function getIdFieldsFromData($data)

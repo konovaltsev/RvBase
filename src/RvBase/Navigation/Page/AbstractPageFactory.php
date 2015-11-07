@@ -78,16 +78,26 @@ abstract class AbstractPageFactory implements PageFactoryInterface
         return $pages;
     }
 
-    /**
-     * @return string
-     */
-    protected function getMatchedRouteName()
+    protected function isMatched($routeName, $params = [])
     {
-        if($this->routeMatch instanceof RouteMatch)
+        if(!($this->routeMatch instanceof RouteMatch))
         {
-            return $this->routeMatch->getMatchedRouteName();
+            return false;
         }
 
-        return '';
+        $matchedRouteName = $this->routeMatch->getMatchedRouteName();
+        if(substr($matchedRouteName, 0, strlen($routeName)) !== $routeName) {
+            return false;
+        }
+
+        foreach($params as $paramName => $paramValue)
+        {
+            if($this->routeMatch->getParam($paramName) != $paramValue)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

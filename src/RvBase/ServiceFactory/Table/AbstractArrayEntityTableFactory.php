@@ -3,11 +3,13 @@
 namespace RvBase\ServiceFactory\Table;
 
 use RvBase\Db\ResultSet\ResultSet;
+use RvBase\Entity\ArrayEntity;
 use RvBase\Table\AbstractArrayEntityTable;
 use RvBase\Table\ArrayEntityIdentityMap;
 use Zend\Db\Adapter\AdapterInterface;
 use Zend\Db\Sql\TableIdentifier;
 use Zend\Db\TableGateway\TableGateway;
+use Zend\InputFilter\InputFilter;
 use Zend\ServiceManager\Exception;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -61,6 +63,18 @@ abstract class AbstractArrayEntityTableFactory implements FactoryInterface
     {
         $entity = $this->createEntityPrototype($serviceLocator);
 
+        $lazyLoaders = $this->getLazyLoaders($serviceLocator);
+        if($lazyLoaders && $entity instanceof ArrayEntity)
+        {
+            $entity->addLazyLoaders($lazyLoaders);
+        }
+
+        $sourceInputFilter = $this->getSourceInputFilter();
+        if($sourceInputFilter)
+        {
+            $entity->setSourceInputFilter($sourceInputFilter);
+        }
+
         $resultSetPrototype = new ResultSet();
         $resultSetPrototype->setArrayObjectPrototype($entity);
 
@@ -102,6 +116,25 @@ abstract class AbstractArrayEntityTableFactory implements FactoryInterface
     protected function getFeatures(ServiceLocatorInterface $serviceLocator)
     {
         return array();
+    }
+
+    /**
+     * Get lazy loader callbacks for ArrayEntity lazyLoadData
+     *
+     * @param ServiceLocatorInterface $serviceLocator
+     * @return array
+     */
+    protected function getLazyLoaders(ServiceLocatorInterface $serviceLocator)
+    {
+        return array();
+    }
+
+    /**
+     * @return null|InputFilter
+     */
+    protected function getSourceInputFilter()
+    {
+        return null;
     }
 
     /**
