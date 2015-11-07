@@ -80,6 +80,29 @@ class ArrayEntity implements ArrayAccess
         return $this->lazyData[$field];
     }
 
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        $lazyData = [];
+
+        foreach ($this->lazyLoader as $lazyField => $callback) {
+            $lazyValue = $this->getLazyField($lazyField);
+            if (is_array($lazyValue)) {
+                $lazyData[$lazyField] = $lazyValue;
+            } elseif (method_exists($lazyValue, 'toArray')) {
+                $lazyData[$lazyField] = $lazyValue->toArray();
+            } elseif (method_exists($lazyValue, 'getArrayCopy')) {
+                $lazyData[$lazyField] = $lazyValue->getArrayCopy();
+            } else {
+                $lazyData[$lazyField] = $lazyValue;
+            }
+        }
+
+        return array_merge($this->data, $lazyData);
+    }
+
     public function exchangeArray($data)
     {
         $filters = $this->getSourceInputFilter();
