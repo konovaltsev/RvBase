@@ -2,7 +2,9 @@
 
 namespace RvBase\Mvc\Controller;
 
+use RvBase\Permissions\PermissionsInterface;
 use Zend\Mvc\Controller\AbstractActionController as BaseController;
+use Zend\Permissions\Acl\Resource\ResourceInterface;
 use Zend\View\Model\ConsoleModel;
 use Zend\View\Model\ViewModel;
 
@@ -16,5 +18,27 @@ abstract class AbstractActionController extends BaseController
     public function notAllowedAction()
     {
         return $this->notAllowed();
+    }
+
+    /**
+     * Is permission allowed on something fo current identity
+     *
+     * @param string|ResourceInterface|object $resource
+     * @param null $privilege
+     * @return bool
+     */
+    protected function isAllowed($resource, $privilege = null)
+    {
+        return $this->getPermissions()->isAllowed($resource, $privilege);
+    }
+
+    /**
+     * @return PermissionsInterface
+     */
+    protected function getPermissions()
+    {
+        return $this->getServiceLocator()->get(
+            $this->getServiceLocator()->get('Config')['rv-base']['permissions']['service']
+        );
     }
 }

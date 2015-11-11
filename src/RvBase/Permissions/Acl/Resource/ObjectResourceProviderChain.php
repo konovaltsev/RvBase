@@ -21,6 +21,11 @@ class ObjectResourceProviderChain implements ResourceProviderInterface
      */
     public function getResource($resource)
     {
+        if(!is_object($resource))
+        {
+            return false;
+        }
+
         $objectClass = get_class($resource);
         if(array_key_exists($objectClass, $this->objectResourceProviders))
         {
@@ -36,6 +41,11 @@ class ObjectResourceProviderChain implements ResourceProviderInterface
      */
     public function getParentResource($resource)
     {
+        if(!is_object($resource))
+        {
+            return false;
+        }
+
         $objectClass = get_class($resource);
         if(array_key_exists($objectClass, $this->objectResourceProviders))
         {

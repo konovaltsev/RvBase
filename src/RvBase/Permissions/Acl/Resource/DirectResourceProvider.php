@@ -30,6 +30,6 @@ class DirectResourceProvider implements ResourceProviderInterface
      */
     public function getParentResource($resource)
     {
-        throw new Exception\LogicException('Direct resource provider know nothing about his parent resource');
+        return false;
     }
 }

@@ -13,11 +13,6 @@ return array(
         'filter_helpers' => array(
         ),
 
-        'acl' => array(
-            'default_role' => 'current_user',
-            'default_acl' => 'acl',
-        ),
-
         'permissions' => array(
             'acl' => array(
                 /*
@@ -51,9 +46,12 @@ return array(
                 ),
                 */
 
-                'identity_role_provider' => 'rv-base.permissions.acl.identity-role-provider',
+                //Services
+                'acl'                            => 'acl',
+                'identity_role_provider'         => 'rv-base.permissions.acl.identity-role-provider',
                 'identity_parent_roles_provider' => 'rv-base.permissions.acl.identity-parent-roles-provider',
-                'identity_role_initializer' => 'rv-base.permissions.acl.identity-role-initializer',
+                'identity_role_initializer'      => 'rv-base.permissions.acl.identity-role-initializer',
+                'resource_initializer'           => 'rv-base.permissions.acl.resource-initializer',
 
                 /*
                 // For true init_authenticated_identity_role
@@ -81,6 +79,8 @@ return array(
                 ),
                  */
             ),
+
+//            'service' => 'rv-base.permissions',
         ),
 
         'db' => array(

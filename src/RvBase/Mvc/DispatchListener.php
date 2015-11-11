@@ -40,8 +40,6 @@ class DispatchListener implements ListenerAggregateInterface
     public function attach(EventManagerInterface $events)
     {
         $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH, array($this, 'validateByRouteParams'), 10);
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH, array($this, 'validateByRoute'), 9);
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH, array($this, 'validateByController'), 8);
     }
 
     /**
@@ -65,8 +63,8 @@ class DispatchListener implements ListenerAggregateInterface
         $controllerName   = $routeMatch->getParam('controller', 'not-found');
         $application      = $e->getApplication();
 
-        $resource   = $routeMatch->getParam('resource');
-        $privilege  = $routeMatch->getParam('privilege');
+        $resource   = $routeMatch->getParam('acl_resource');
+        $privilege  = $routeMatch->getParam('acl_privilege');
         if(empty($resource))
         {
             //Nothing to check
@@ -74,70 +72,6 @@ class DispatchListener implements ListenerAggregateInterface
         }
 
         $permissions = $this->getPermissions();
-
-        try
-        {
-            if($permissions->isAllowed($resource, $privilege))
-            {
-                return $e->getResult();
-            }
-        }
-        catch(\Exception $exception)
-        {
-            $return = $this->marshalNotAllowedEvent(Application::ERROR_ACL_FAILED, $controllerName, $e, $application, $exception);
-            return $this->complete($return, $e);
-        }
-        $return = $this->marshalNotAllowedEvent(Application::ERROR_CONTROLLER_NOT_ALLOWED, $controllerName, $e, $application);
-        return $this->complete($return, $e);
-    }
-
-    public function validateByRoute(MvcEvent $e)
-    {
-        $routeMatch       = $e->getRouteMatch();
-        $controllerName   = $routeMatch->getParam('controller', 'not-found');
-        $application      = $e->getApplication();
-
-        $resource  = sprintf('mvc.route:%s', $routeMatch->getMatchedRouteName());
-        $privilege = 'access';
-
-        $permissions = $this->getPermissions();
-        if(!$permissions->hasResource($resource))
-        {
-            //Nothing to check
-            return $e->getResult();
-        }
-
-        try
-        {
-            if($permissions->isAllowed($resource, $privilege))
-            {
-                return $e->getResult();
-            }
-        }
-        catch(\Exception $exception)
-        {
-            $return = $this->marshalNotAllowedEvent(Application::ERROR_ACL_FAILED, $controllerName, $e, $application, $exception);
-            return $this->complete($return, $e);
-        }
-        $return = $this->marshalNotAllowedEvent(Application::ERROR_CONTROLLER_NOT_ALLOWED, $controllerName, $e, $application);
-        return $this->complete($return, $e);
-    }
-
-    public function validateByController(MvcEvent $e)
-    {
-        $routeMatch       = $e->getRouteMatch();
-        $controllerName   = $routeMatch->getParam('controller', 'not-found');
-        $application      = $e->getApplication();
-
-        $resource   = sprintf('mvc.controller:%s', $controllerName);
-        $privilege  = $routeMatch->getParam('action', 'not-found');
-
-        $permissions = $this->getPermissions();
-        if(!$permissions->hasResource($resource))
-        {
-            //Nothing to check
-            return $e->getResult();
-        }
 
         try
         {

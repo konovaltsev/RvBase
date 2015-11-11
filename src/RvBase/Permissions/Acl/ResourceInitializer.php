@@ -23,14 +23,22 @@ class ResourceInitializer implements ResourceInitializerInterface
     /**
      * @param Acl $acl
      * @param mixed $resource
-     * @return ResourceInterface|string
+     * @return ResourceInterface|string|mixed
      */
     public function initialize(Acl $acl, $resource)
     {
         $aclResource = $this->resourceProvider->getResource($resource);
-        if(!$acl->hasResource($aclResource))
-        {
-            $acl->addResource($aclResource, $this->resourceProvider->getParentResource($resource));
+        if ($aclResource === false) {
+            return $resource;
+        }
+
+        if (!$acl->hasResource($aclResource)) {
+            $parentResource = $this->resourceProvider->getParentResource($resource);
+            if ($parentResource === false) {
+                return $aclResource;
+            }
+
+            $acl->addResource($aclResource, $parentResource);
         }
 
         return $aclResource;

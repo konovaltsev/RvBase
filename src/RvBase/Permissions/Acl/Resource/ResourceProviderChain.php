@@ -32,20 +32,7 @@ class ResourceProviderChain implements ResourceProviderInterface
             return $aclResource;
         }
 
-        throw new Exception\RuntimeException(
-            sprintf(
-                '%s: resource not found for `%s`',
-                __METHOD__,
-                is_object($resource)
-                    ? get_class($resource)
-                    :
-                    (
-                        is_scalar($resource)
-                            ? sprintf('%s(%s)', gettype($resource), $resource)
-                            : gettype($resource)
-                    )
-            )
-        );
+        return false;
     }
 
     /**
@@ -65,20 +52,7 @@ class ResourceProviderChain implements ResourceProviderInterface
             return $aclResource;
         }
 
-        throw new Exception\RuntimeException(
-            sprintf(
-                '%s: parent resource not found for `%s`',
-                __METHOD__,
-                is_object($resource)
-                    ? get_class($resource)
-                    :
-                    (
-                    is_scalar($resource)
-                        ? sprintf('%s(%s)', gettype($resource), $resource)
-                        : gettype($resource)
-                    )
-            )
-        );
+        return false;
     }
 
     public function addProvider(ResourceProviderInterface $provider)
