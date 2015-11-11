@@ -2,12 +2,11 @@
 
 namespace RvBase\Mvc;
 
-use RvBase\Permissions\Acl\AclAwareInterface;
+use RvBase\Permissions\PermissionsInterface;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\Mvc as ZendMvc;
 use Zend\Mvc\MvcEvent;
-use Zend\Permissions\Acl\AclInterface;
 use ArrayObject;
 use Zend\Stdlib\ArrayUtils;
 
@@ -15,16 +14,22 @@ use Zend\Stdlib\ArrayUtils;
  * Class DispatchListener
  * @package RvBase\Mvc
  */
-class DispatchListener implements ListenerAggregateInterface, AclAwareInterface
+class DispatchListener implements ListenerAggregateInterface
 {
-    protected $acl;
-
-    protected $role = false;
+    /** @var PermissionsInterface */
+    private $permissions;
 
     /**
      * @var \Zend\Stdlib\CallbackHandler[]
      */
     protected $listeners = array();
+
+    public function __construct(
+        PermissionsInterface $permissions
+    )
+    {
+        $this->permissions = $permissions;
+    }
 
     /**
      * Attach listeners to an event manager
@@ -34,7 +39,9 @@ class DispatchListener implements ListenerAggregateInterface, AclAwareInterface
      */
     public function attach(EventManagerInterface $events)
     {
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH, array($this, 'onDispatch'), 10);
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH, array($this, 'validateByRouteParams'), 10);
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH, array($this, 'validateByRoute'), 9);
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH, array($this, 'validateByController'), 8);
     }
 
     /**
@@ -52,37 +59,89 @@ class DispatchListener implements ListenerAggregateInterface, AclAwareInterface
         }
     }
 
-    public function onDispatch(MvcEvent $e)
+    public function validateByRouteParams(MvcEvent $e)
     {
         $routeMatch       = $e->getRouteMatch();
         $controllerName   = $routeMatch->getParam('controller', 'not-found');
         $application      = $e->getApplication();
 
         $resource   = $routeMatch->getParam('resource');
-        $privilege   = $routeMatch->getParam('privilege');
-        if(empty($resource) || empty($privilege))
+        $privilege  = $routeMatch->getParam('privilege');
+        if(empty($resource))
         {
             //Nothing to check
             return $e->getResult();
         }
 
-        $acl = $this->getAcl();
-        if($acl === null)
+        $permissions = $this->getPermissions();
+
+        try
         {
-            $return = $this->marshalNotAllowedEvent(Application::ERROR_ACL_NOT_FOUND, $controllerName, $e, $application);
+            if($permissions->isAllowed($resource, $privilege))
+            {
+                return $e->getResult();
+            }
+        }
+        catch(\Exception $exception)
+        {
+            $return = $this->marshalNotAllowedEvent(Application::ERROR_ACL_FAILED, $controllerName, $e, $application, $exception);
             return $this->complete($return, $e);
         }
+        $return = $this->marshalNotAllowedEvent(Application::ERROR_CONTROLLER_NOT_ALLOWED, $controllerName, $e, $application);
+        return $this->complete($return, $e);
+    }
 
-        $role = $this->getRole();
-        if($role === false)
+    public function validateByRoute(MvcEvent $e)
+    {
+        $routeMatch       = $e->getRouteMatch();
+        $controllerName   = $routeMatch->getParam('controller', 'not-found');
+        $application      = $e->getApplication();
+
+        $resource  = sprintf('mvc.route:%s', $routeMatch->getMatchedRouteName());
+        $privilege = 'access';
+
+        $permissions = $this->getPermissions();
+        if(!$permissions->hasResource($resource))
         {
-            $return = $this->marshalNotAllowedEvent(Application::ERROR_ACL_ROLE_NOT_SET, $controllerName, $e, $application);
-            return $this->complete($return, $e);
+            //Nothing to check
+            return $e->getResult();
         }
 
         try
         {
-            if($acl->isAllowed($role, $resource, $privilege))
+            if($permissions->isAllowed($resource, $privilege))
+            {
+                return $e->getResult();
+            }
+        }
+        catch(\Exception $exception)
+        {
+            $return = $this->marshalNotAllowedEvent(Application::ERROR_ACL_FAILED, $controllerName, $e, $application, $exception);
+            return $this->complete($return, $e);
+        }
+        $return = $this->marshalNotAllowedEvent(Application::ERROR_CONTROLLER_NOT_ALLOWED, $controllerName, $e, $application);
+        return $this->complete($return, $e);
+    }
+
+    public function validateByController(MvcEvent $e)
+    {
+        $routeMatch       = $e->getRouteMatch();
+        $controllerName   = $routeMatch->getParam('controller', 'not-found');
+        $application      = $e->getApplication();
+
+        $resource   = sprintf('mvc.controller:%s', $controllerName);
+        $privilege  = $routeMatch->getParam('action', 'not-found');
+
+        $permissions = $this->getPermissions();
+        if(!$permissions->hasResource($resource))
+        {
+            //Nothing to check
+            return $e->getResult();
+        }
+
+        try
+        {
+            if($permissions->isAllowed($resource, $privilege))
             {
                 return $e->getResult();
             }
@@ -102,7 +161,7 @@ class DispatchListener implements ListenerAggregateInterface, AclAwareInterface
      * @param  string $type
      * @param  string $controllerName
      * @param  MvcEvent $event
-     * @param  ZendMvc\Application $application
+     * @param  ZendMvc\ApplicationInterface $application
      * @param  \Exception $exception
      * @return mixed
      */
@@ -110,7 +169,7 @@ class DispatchListener implements ListenerAggregateInterface, AclAwareInterface
         $type,
         $controllerName,
         MvcEvent $event,
-        ZendMvc\Application $application,
+        ZendMvc\ApplicationInterface $application,
         \Exception $exception = null
     )
     {
@@ -149,34 +208,10 @@ class DispatchListener implements ListenerAggregateInterface, AclAwareInterface
     }
 
     /**
-     * @return AclInterface
+     * @return PermissionsInterface
      */
-    public function getAcl()
+    private function getPermissions()
     {
-        return $this->acl;
-    }
-
-    /**
-     * @param AclInterface $acl
-     */
-    public function setAcl(AclInterface $acl)
-    {
-        $this->acl = $acl;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRole()
-    {
-        return $this->role;
-    }
-
-    /**
-     * @param mixed $role
-     */
-    public function setRole($role)
-    {
-        $this->role = $role;
+        return $this->permissions;
     }
 }
