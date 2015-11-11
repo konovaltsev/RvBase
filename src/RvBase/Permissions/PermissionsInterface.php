@@ -2,8 +2,6 @@
 
 namespace RvBase\Permissions;
 
-use Zend\Permissions\Acl\Resource\ResourceInterface;
-
 /**
  * Класс PermissionsInterface
  *
