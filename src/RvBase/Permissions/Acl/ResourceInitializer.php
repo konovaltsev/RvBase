@@ -29,13 +29,13 @@ class ResourceInitializer implements ResourceInitializerInterface
     {
         $aclResource = $this->resourceProvider->getResource($resource);
         if ($aclResource === false) {
-            return $resource;
+            return null;
         }
 
         if (!$acl->hasResource($aclResource)) {
             $parentResource = $this->resourceProvider->getParentResource($resource);
             if ($parentResource === false) {
-                return $aclResource;
+                return null;
             }
 
             $acl->addResource($aclResource, $parentResource);

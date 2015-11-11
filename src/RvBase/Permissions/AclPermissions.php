@@ -5,7 +5,9 @@ namespace RvBase\Permissions;
 use RvBase\Permissions\Acl\IdentityRoleInitializerInterface;
 use RvBase\Permissions\Acl\ResourceInitializerInterface;
 use Zend\Authentication\AuthenticationServiceInterface;
-use Zend\Permissions\Acl\AclInterface;
+use Zend\Permissions\Acl\Acl;
+use Zend\Permissions\Acl\Exception;
+use Zend\Permissions\Acl\Resource\ResourceInterface;
 use Zend\Permissions\Acl\Role\RoleInterface;
 
 /**
@@ -15,7 +17,7 @@ use Zend\Permissions\Acl\Role\RoleInterface;
  */
 class AclPermissions implements PermissionsInterface
 {
-    /** @var AclInterface */
+    /** @var Acl */
     private $acl;
 
     /** @var AuthenticationServiceInterface */
@@ -34,7 +36,7 @@ class AclPermissions implements PermissionsInterface
     private $identityRole = false;
 
     public function __construct(
-        AclInterface $acl,
+        Acl $acl,
         AuthenticationServiceInterface $authenticationService,
         IdentityRoleInitializerInterface $identityRoleInitializer,
         ResourceInitializerInterface $resourceInitializer
@@ -52,7 +54,7 @@ class AclPermissions implements PermissionsInterface
 
         return $acl->isAllowed(
             $this->getIdentityRole(),
-            $this->getResourceInitializer()->initialize($acl, $resource),
+            $this->getResource($resource),
             $privilege
         );
     }
@@ -61,13 +63,44 @@ class AclPermissions implements PermissionsInterface
     {
         $acl = $this->getAcl();
 
-        return $acl->hasResource($this->getResourceInitializer()->initialize($acl, $resource));
+        $aclResource = $this->findResource($resource);
+        if(!(is_string($aclResource) || ($aclResource instanceof ResourceInterface)))
+        {
+            return false;
+        }
+
+        return $acl->hasResource($aclResource);
+    }
+
+    public function getResource($resource)
+    {
+        $aclResource = $this->findResource($resource);
+        if(!$aclResource)
+        {
+            throw new Exception\InvalidArgumentException(
+                sprintf(
+                    'Resource for `%s` not found',
+                    (
+                        is_object($resource)
+                            ? get_class($resource)
+                            : (is_scalar($resource)? sprintf('%s[%s]', gettype($resource), $resource) : gettype($resource))
+                    )
+                )
+            );
+        }
+
+        return $aclResource;
+    }
+
+    public function findResource($resource)
+    {
+        return $this->getResourceInitializer()->initialize($this->getAcl(), $resource);
     }
 
     /**
      * Получение Acl
      *
-     * @return mixed
+     * @return Acl
      */
     public function getAcl()
     {

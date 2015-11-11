@@ -5,7 +5,7 @@ namespace RvBase\Permissions;
 use RvBase\Permissions\Acl\IdentityRoleInitializerInterface;
 use RvBase\Permissions\Acl\ResourceInitializerInterface;
 use Zend\Authentication\AuthenticationServiceInterface;
-use Zend\Permissions\Acl\AclInterface;
+use Zend\Permissions\Acl\Acl;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -36,7 +36,7 @@ class AclPermissionsFactory implements FactoryInterface
 
     /**
      * @param ServiceLocatorInterface $serviceLocator
-     * @return AclInterface
+     * @return Acl
      */
     protected function getAcl(ServiceLocatorInterface $serviceLocator)
     {
