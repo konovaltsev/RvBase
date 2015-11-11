@@ -15,7 +15,7 @@ use Zend\Permissions\Acl\Role\RoleInterface;
  *
  * @package RvBase\Permissions
  */
-class AclPermissions implements PermissionsInterface
+class AclPermissions implements AclPermissionsInterface
 {
     /** @var Acl */
     private $acl;
