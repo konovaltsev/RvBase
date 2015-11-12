@@ -3,6 +3,7 @@
 namespace RvBase\Mvc\Controller;
 
 use RvBase\Permissions\PermissionsInterface;
+use RvBase\ServiceProvider\PermissionsServiceProviderTrait;
 use Zend\Mvc\Controller\AbstractActionController as BaseController;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 use Zend\View\Model\ConsoleModel;
@@ -15,6 +16,8 @@ use Zend\View\Model\ViewModel;
  */
 abstract class AbstractActionController extends BaseController
 {
+    use PermissionsServiceProviderTrait;
+
     public function notAllowedAction()
     {
         return $this->notAllowed();
@@ -37,8 +40,6 @@ abstract class AbstractActionController extends BaseController
      */
     protected function getPermissions()
     {
-        return $this->getServiceLocator()->get(
-            $this->getServiceLocator()->get('Config')['rv-base']['permissions']['service']
-        );
+        return $this->getPermissionsService($this->getServiceLocator());
     }
 }
