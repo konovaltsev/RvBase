@@ -53,10 +53,6 @@ return array(
                 'identity_role_initializer'      => 'rv-base.permissions.acl.identity-role-initializer',
                 'resource_initializer'           => 'rv-base.permissions.acl.resource-initializer',
 
-                /*
-                // For true init_authenticated_identity_role
-                'authentication_service' => 'rv-base.authentication',
-                */
                 'init_authenticated_identity_role' => false,
 
                 /*
@@ -80,6 +76,7 @@ return array(
                  */
             ),
 
+//            'authentication_service' => 'rv-base.authentication',
 //            'service' => 'rv-base.permissions',
         ),
 

@@ -6,6 +6,7 @@ use RvBase\Db\ResultSet\ResultSet;
 use RvBase\Entity\ArrayEntity;
 use RvBase\Table\AbstractArrayEntityTable;
 use RvBase\Table\ArrayEntityIdentityMap;
+use RvBase\Table\ArrayEntityTableInterface;
 use Zend\Db\Adapter\AdapterInterface;
 use Zend\Db\Sql\TableIdentifier;
 use Zend\Db\TableGateway\TableGateway;
@@ -30,13 +31,15 @@ abstract class AbstractArrayEntityTableFactory implements FactoryInterface
      * Create service
      *
      * @param ServiceLocatorInterface $serviceLocator
-     * @return mixed
+     * @return ArrayEntityTableInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $this->config = $this->getConfig($serviceLocator);
         $tableGateway = $this->createTableGateway($serviceLocator);
-        $table = $this->createTable($tableGateway, $serviceLocator);
+        $table        = $this->createTable($tableGateway, $serviceLocator);
+
+        $this->initTable($table);
 
         /** @var ResultSet $resultSet */
         $resultSet = $tableGateway->getResultSetPrototype();
@@ -49,13 +52,14 @@ abstract class AbstractArrayEntityTableFactory implements FactoryInterface
     }
 
     /**
-     * @param TableGateway $tableGateway
+     * @param TableGateway            $tableGateway
      * @param ServiceLocatorInterface $serviceLocator
      * @return AbstractArrayEntityTable
      */
     protected function createTable(TableGateway $tableGateway, ServiceLocatorInterface $serviceLocator)
     {
         $tableClass = $this->getTableClass($serviceLocator);
+
         return new $tableClass($tableGateway);
     }
 
@@ -64,14 +68,12 @@ abstract class AbstractArrayEntityTableFactory implements FactoryInterface
         $entity = $this->createEntityPrototype($serviceLocator);
 
         $lazyLoaders = $this->getLazyLoaders($serviceLocator);
-        if($lazyLoaders && $entity instanceof ArrayEntity)
-        {
+        if ($lazyLoaders && $entity instanceof ArrayEntity) {
             $entity->addLazyLoaders($lazyLoaders);
         }
 
         $sourceInputFilter = $this->getSourceInputFilter();
-        if($sourceInputFilter)
-        {
+        if ($sourceInputFilter) {
             $entity->setSourceInputFilter($sourceInputFilter);
         }
 
@@ -86,14 +88,24 @@ abstract class AbstractArrayEntityTableFactory implements FactoryInterface
         );
     }
 
+    /**
+     * @param AbstractArrayEntityTable $table
+     */
+    protected function initTable(AbstractArrayEntityTable $table)
+    {
+        if (isset($this->config['table']['primary_key'])) {
+            $table->setPrimaryKey($this->config['table']['primary_key']);
+        }
+    }
+
     protected function getTable()
     {
-        $table = $this->getTableName();
+        $table  = $this->getTableName();
         $schema = $this->getSchema();
-        if($schema)
-        {
+        if ($schema) {
             $table = new TableIdentifier($table, $schema);
         }
+
         return $table;
     }
 
@@ -104,6 +116,7 @@ abstract class AbstractArrayEntityTableFactory implements FactoryInterface
     protected function getAdapter(ServiceLocatorInterface $serviceLocator)
     {
         $adapterName = $this->getAdapterName($serviceLocator);
+
         return $serviceLocator->get($adapterName);
     }
 
@@ -115,7 +128,7 @@ abstract class AbstractArrayEntityTableFactory implements FactoryInterface
      */
     protected function getFeatures(ServiceLocatorInterface $serviceLocator)
     {
-        return array();
+        return [];
     }
 
     /**
@@ -126,7 +139,7 @@ abstract class AbstractArrayEntityTableFactory implements FactoryInterface
      */
     protected function getLazyLoaders(ServiceLocatorInterface $serviceLocator)
     {
-        return array();
+        return [];
     }
 
     /**
@@ -147,8 +160,7 @@ abstract class AbstractArrayEntityTableFactory implements FactoryInterface
 
     protected function getTableClass()
     {
-        if(!isset($this->config['class']))
-        {
+        if (!isset($this->config['class'])) {
             throw new Exception\RuntimeException(
                 sprintf(
                     '%s::%s: table class name does not exists in table config with key `%s`',
@@ -165,25 +177,22 @@ abstract class AbstractArrayEntityTableFactory implements FactoryInterface
     protected function getAdapterName()
     {
         return
-            isset($this->config['db-adapter'])?
+            isset($this->config['db-adapter']) ?
                 $this->config['db-adapter']
-                : $this->defaultAdapter
-        ;
+                : $this->defaultAdapter;
     }
 
     protected function getSchema()
     {
         return
-            isset($this->config['schema'])?
+            isset($this->config['schema']) ?
                 $this->config['schema']
-                : null
-            ;
+                : null;
     }
 
     protected function getTableName()
     {
-        if(!isset($this->config['name']))
-        {
+        if (!isset($this->config['name'])) {
             throw new Exception\RuntimeException(
                 sprintf(
                     '%s::%s: table name does not exists in table config with key `%s`',
@@ -193,20 +202,19 @@ abstract class AbstractArrayEntityTableFactory implements FactoryInterface
                 )
             );
         }
+
         return $this->config['name'];
     }
 
     protected function getConfig(ServiceLocatorInterface $serviceLocator)
     {
-        if (!$serviceLocator->has('Config'))
-        {
-            return array();
+        if (!$serviceLocator->has('Config')) {
+            return [];
         }
 
         $config = $serviceLocator->get('Config');
-        if(!isset($config['rv-base']['db']['tables'][$this->configKey]) || !is_array($config['rv-base']['db']['tables'][$this->configKey]))
-        {
-            return array();
+        if (!isset($config['rv-base']['db']['tables'][$this->configKey]) || !is_array($config['rv-base']['db']['tables'][$this->configKey])) {
+            return [];
         }
 
         return $config['rv-base']['db']['tables'][$this->configKey];

@@ -6,6 +6,7 @@ use RvBase\Permissions\Acl\Role\IdentityRoleProviderInterface;
 use RvBase\Permissions\Acl\Role\IdentityRoleParentsProviderInterface;
 use Zend\Permissions\Acl\Acl;
 use Zend\Permissions\Acl\Role\RoleInterface;
+use Zend\Stdlib\SplPriorityQueue;
 
 /**
  * Class IdentityRoleInitializer
@@ -24,21 +25,34 @@ class IdentityRoleInitializer implements IdentityRoleInitializerInterface
         IdentityRoleParentsProviderInterface $parentRolesProvider
     )
     {
-        $this->roleProvider = $roleProvider;
+        $this->roleProvider        = $roleProvider;
         $this->parentRolesProvider = $parentRolesProvider;
     }
 
     /**
-     * @param Acl $acl
+     * @param Acl   $acl
      * @param mixed $identity
      * @return RoleInterface|string
      */
     public function initialize(Acl $acl, $identity)
     {
         $role = $this->roleProvider->getRole($identity);
-        if(!$acl->hasRole($role))
-        {
-            $acl->addRole($role, $this->parentRolesProvider->getParentRoles($identity));
+        if (!$acl->hasRole($role)) {
+            $parents = $this->parentRolesProvider->getParentRoles($identity);
+            if (!is_array($parents)) {
+                $parents = [$parents];
+            }
+
+            $queue = new SplPriorityQueue();
+            foreach ($parents as $key => $value) {
+                if (is_int($key)) {
+                    $queue->insert($value, 1);
+                } else {
+                    $queue->insert($key, $value);
+                }
+            }
+
+            $acl->addRole($role, $queue->toArray());
         }
 
         return $role;

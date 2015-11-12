@@ -3,9 +3,9 @@
 namespace RvBase\ServiceFactory\Acl;
 
 use Zend\Permissions\Acl\Acl;
+use Zend\ServiceManager\Exception;
 use Zend\ServiceManager\InitializerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\Exception;
 
 /**
  * Class RulesConfigInitializer
@@ -16,7 +16,7 @@ class RulesConfigInitializer implements InitializerInterface
     /**
      * Initialize
      *
-     * @param $instance
+     * @param                         $instance
      * @param ServiceLocatorInterface $serviceLocator
      * @return mixed
      */
@@ -26,16 +26,13 @@ class RulesConfigInitializer implements InitializerInterface
 
         array_walk(
             $config,
-            function($ruleConfig, $ruleKey, Acl $acl) use($serviceLocator)
-            {
+            function ($ruleConfig, $ruleKey, Acl $acl) use ($serviceLocator) {
                 $assert = null;
-                if(isset($ruleConfig['assert']))
-                {
-                    switch(true)
-                    {
+                if (isset($ruleConfig['assert'])) {
+                    switch (true) {
                         case isset($ruleConfig['assert']['class']):
                             $assertClass = $ruleConfig['assert']['class'];
-                            $assert = new $assertClass();
+                            $assert      = new $assertClass();
                             break;
                         case isset($ruleConfig['assert']['service']):
                             $assert = $serviceLocator->get($ruleConfig['assert']['service']);
@@ -60,15 +57,13 @@ class RulesConfigInitializer implements InitializerInterface
 
     protected function getConfig(ServiceLocatorInterface $serviceLocator)
     {
-        if (!$serviceLocator->has('Config'))
-        {
-            return array();
+        if (!$serviceLocator->has('Config')) {
+            return [];
         }
 
         $config = $serviceLocator->get('Config');
-        if(!isset($config['rv-base']['permissions']['acl']['rules']) || !is_array($config['rv-base']['permissions']['acl']['rules']))
-        {
-            return array();
+        if (!isset($config['rv-base']['permissions']['acl']['rules']) || !is_array($config['rv-base']['permissions']['acl']['rules'])) {
+            throw new Exception\RuntimeException('`rules` config does not exists in [\'rv-base\'][\'permissions\'][\'acl\']');
         }
 
         return $config['rv-base']['permissions']['acl']['rules'];

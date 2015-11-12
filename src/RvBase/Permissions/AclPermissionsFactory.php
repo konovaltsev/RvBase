@@ -49,7 +49,7 @@ class AclPermissionsFactory implements FactoryInterface
      */
     protected function getAuthenticationService(ServiceLocatorInterface $serviceLocator)
     {
-        return $serviceLocator->get($this->permissionsConfig['acl']['authentication_service']);
+        return $serviceLocator->get($this->permissionsConfig['authentication_service']);
     }
 
     /**

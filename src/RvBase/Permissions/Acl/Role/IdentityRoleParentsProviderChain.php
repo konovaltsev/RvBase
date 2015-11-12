@@ -26,19 +26,29 @@ class IdentityRoleParentsProviderChain implements IdentityRoleParentsProviderInt
      */
     public function getParentRoles($identity)
     {
-        $allParentRoles = array();
+        $allParentRoles = [];
 
-        /** @var IdentityRoleParentsProviderInterface $parentsProvider */
-        foreach($this->parentsProviders as $parentsProvider)
-        {
-            $parentRoles = $parentsProvider->getParentRoles($identity);
-            if(!empty($parentRoles))
-            {
-                if(!is_array($parentRoles))
-                {
-                    $parentRoles = array($parentRoles);
+        foreach ($this->parentsProviders as $parentsProviderData) {
+            /** @var IdentityRoleParentsProviderInterface $parentsProvider */
+            $parentsProvider = $parentsProviderData['provider'];
+            $parentsPriority = $parentsProviderData['priority'];
+            $parentRoles     = $parentsProvider->getParentRoles($identity);
+
+            if (!empty($parentRoles)) {
+                if (!is_array($parentRoles)) {
+                    $parentRoles = [$parentRoles];
                 }
-                $allParentRoles = array_merge($allParentRoles, $parentRoles);
+
+                $normalizedParentRoles = [];
+                foreach ($parentRoles as $key => $value) {
+                    if (is_numeric($key)) {
+                        $normalizedParentRoles[$value] = $parentsPriority;
+                    } else {
+                        $normalizedParentRoles[$key] = $value;
+                    }
+                }
+
+                $allParentRoles = array_merge($allParentRoles, $normalizedParentRoles);
             }
         }
 
@@ -47,6 +57,12 @@ class IdentityRoleParentsProviderChain implements IdentityRoleParentsProviderInt
 
     public function addParentsProvider(IdentityRoleParentsProviderInterface $provider, $priority = 1)
     {
-        $this->parentsProviders->insert($provider, $priority);
+        $this->parentsProviders->insert(
+            [
+                'provider' => $provider,
+                'priority' => $priority,
+            ],
+            $priority
+        );
     }
 }
