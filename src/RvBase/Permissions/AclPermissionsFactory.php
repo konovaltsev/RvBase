@@ -27,7 +27,7 @@ class AclPermissionsFactory implements FactoryInterface
         $this->getPermissionsConfig($serviceLocator);
 
         return new AclPermissions(
-            $this->getAcl($serviceLocator),
+            function() use($serviceLocator){ return $this->getAcl($serviceLocator); },
             $this->getAuthenticationService($serviceLocator),
             $this->getIdentityRoleInitializer($serviceLocator),
             $this->getResourceInitializer($serviceLocator)

@@ -2,6 +2,8 @@
 
 namespace RvBase\ServiceFactory\Acl;
 
+use RvBase\Permissions\PermissionsAwareInterface;
+use RvBase\ServiceProvider\PermissionsServiceProviderTrait;
 use Zend\Permissions\Acl\Acl;
 use Zend\ServiceManager\Exception;
 use Zend\ServiceManager\InitializerInterface;
@@ -13,6 +15,8 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class RulesConfigInitializer implements InitializerInterface
 {
+    use PermissionsServiceProviderTrait;
+
     /**
      * Initialize
      *
@@ -40,6 +44,12 @@ class RulesConfigInitializer implements InitializerInterface
                         default:
                             throw new Exception\RuntimeException('Assert must have "class" or "service" key');
                     }
+                }
+
+                // Inject permissions service if required
+                if($assert instanceof PermissionsAwareInterface)
+                {
+                    $assert->setPermissions($this->getPermissionsService($serviceLocator));
                 }
 
                 $acl->setRule(

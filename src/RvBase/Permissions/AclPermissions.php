@@ -20,6 +20,9 @@ class AclPermissions implements AclPermissionsInterface
     /** @var Acl */
     private $acl;
 
+    /** @var \Closure */
+    private $aclProvider;
+
     /** @var AuthenticationServiceInterface */
     private $authenticationService;
 
@@ -36,13 +39,13 @@ class AclPermissions implements AclPermissionsInterface
     private $identityRole = false;
 
     public function __construct(
-        Acl $acl,
+        $aclProvider,
         AuthenticationServiceInterface $authenticationService,
         IdentityRoleInitializerInterface $identityRoleInitializer,
         ResourceInitializerInterface $resourceInitializer
     )
     {
-        $this->acl = $acl;
+        $this->aclProvider = $aclProvider;
         $this->authenticationService = $authenticationService;
         $this->identityRoleInitializer = $identityRoleInitializer;
         $this->resourceInitializer = $resourceInitializer;
@@ -104,6 +107,11 @@ class AclPermissions implements AclPermissionsInterface
      */
     public function getAcl()
     {
+        if($this->acl === null)
+        {
+            $this->acl = call_user_func($this->aclProvider);
+        }
+
         return $this->acl;
     }
 
