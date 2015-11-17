@@ -61,7 +61,12 @@ class ResourceProviderChainServiceFactory implements FactoryInterface
 
                 if(!$provider instanceof ResourceProviderInterface)
                 {
-                    throw new Exception\RuntimeException('Provider must implements ResourceProviderInterface');
+                    throw new Exception\RuntimeException(
+                        sprintf(
+                            'Provider must implements ResourceProviderInterface, `%s` given',
+                            is_object($provider)? get_class($provider) : gettype($provider)
+                        )
+                    );
                 }
 
                 $resourceProvider->addProvider($provider);
@@ -106,7 +111,12 @@ class ResourceProviderChainServiceFactory implements FactoryInterface
 
                 if(!$provider instanceof ResourceProviderInterface)
                 {
-                    throw new Exception\RuntimeException('Provider must implements ResourceProviderInterface');
+                    throw new Exception\RuntimeException(
+                        sprintf(
+                            'Provider must implements ResourceProviderInterface, `%s` given',
+                            is_object($provider)? get_class($provider) : gettype($provider)
+                        )
+                    );
                 }
 
                 $resourceProvider->addProvider($objectClass, $provider);

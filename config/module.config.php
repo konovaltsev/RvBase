@@ -1,49 +1,49 @@
 <?php
 
-return array(
-    'rv-base' => array(
-        'view-manager' => array(
+return [
+    'rv-base' => [
+        'view-manager' => [
             'enabled' => true,
-        ),
+        ],
 
-        'dispatch-listener' => array(
+        'dispatch-listener' => [
             'enabled' => true,
-        ),
+        ],
 
-        'filter_helpers' => array(
-        ),
+        'filter_helpers' => [
+        ],
 
-        'permissions' => array(
-            'acl' => array(
+        'permissions' => [
+            'acl' => [
                 /*
-                'roles' => array(
-                ),
-                'resources' => array(
-                ),
-                'rules' => array(
-                ),
-                'initializers' => array(
-                    'roles' => array(
+                'roles' => [
+                ],
+                'resources' => [
+                ],
+                'rules' => [
+                ],
+                'initializers' => [
+                    'roles' => [
                         'RvBase\ServiceFactory\Acl\RolesConfigInitializer',
-                    ),
-                    'resources' => array(
+                    ],
+                    'resources' => [
                         'RvBase\ServiceFactory\Acl\ResourcesConfigInitializer',
-                    ),
-                    'rules' => array(
+                    ],
+                    'rules' => [
                         'RvBase\ServiceFactory\Acl\RulesConfigInitializer',
-                    ),
-                ),
+                    ],
+                ],
 
-                'parent_roles_providers' => array(
-                    array(
+                'parent_roles_providers' => [
+                    [
                         'class' => 'MyRolesProviderInvokable',
                         'priority' => 1,
-                    ),
-                    array(
+                    ],
+                    [
                         'service' => 'my.parent.roles.provider.service',
                         'priority' => 2,
-                    ),
-                ),
+                    ],
+                ],
                 */
 
                 //Services
@@ -57,107 +57,107 @@ return array(
 
                 /*
                 // Resources providers
-                'resource_providers' => array(
-                    array(
+                'resource_providers' => [
+                    [
                         'class' => 'My\Provider1',
-                    ),
-                    array(
+                    ],
+                    [
                         'service' => 'my.provider1',
-                    ),
-                ),
-                'object_resource_providers' => array(
-                    'My\Some\Entity' => array(
+                    ],
+                ],
+                'object_resource_providers' => [
+                    'My\Some\Entity' => [
                         'class' => 'My\Some\Entity\Provider',
-                    ),
-                    'My\Another\Entity' => array(
+                    ],
+                    'My\Another\Entity' => [
                         'service' => 'my.another.entity.provider.service',
-                    ),
-                ),
+                    ],
+                ],
                  */
-            ),
+            ],
 
 //            'authentication_service' => 'rv-base.authentication',
 //            'service' => 'rv-base.permissions',
-        ),
+        ],
 
-        'db' => array(
-            'tables' => array(
+        'db' => [
+            'tables' => [
                 /*
-                'my_table' => array(
+                'my_table' => [
                     'name' => 'my_table',
                     'schema' => 'my_schema',
                     'class' => 'MyModule\Table\MyTable'
                     'db-adapter' => 'MyAnotherDbAdapter',
-                ),
+                ],
                 */
-            ),
-        ),
+            ],
+        ],
 
         /*
         // Mail config example
-        'mail' => array(
-            'transports' => array(
-                'mail.transport.default' => array(
+        'mail' => [
+            'transports' => [
+                'mail.transport.default' => [
                     'type' => 'smtp',
-                    'options' => array(
+                    'options' => [
                         'host' => 'example.com',
                         'connection_class'  => 'plain',
-                        'connection_config' => array(
+                        'connection_config' => [
                             'username' => 'noreply@example.com',
                             'password' => 'dummy password',
-                        ),
-                    ),
-                ),
-            ),
-            'messages' => array(
-                'options' => array(
-                    'defaults' => array(
+                        ],
+                    ],
+                ],
+            ],
+            'messages' => [
+                'options' => [
+                    'defaults' => [
                         'encoding' => 'UTF-8',
                         'content_charset' => 'UTF-8',
                         'content_type' => \Zend\Mime\Mime::TYPE_HTML,
                         'content_encoding' => \Zend\Mime\Mime::ENCODING_BASE64,
-                    ),
-                ),
-            ),
-            'addresses' => array(
-                'from' => array(
+                    ],
+                ],
+            ],
+            'addresses' => [
+                'from' => [
                     'noreply@example.com' => 'Example Mail Bot',
-                ),
-                'admin' => array(
+                ],
+                'admin' => [
                     'admin1@example.com' => 'First Admin',
                     'developer@another-example.com' => 'Second Admin',
-                ),
-            ),
-        ),
+                ],
+            ],
+        ],
         */
 
         /*
         // time config example
-        'time' => array(
-            'current' => array(
+        'time' => [
+            'current' => [
                 'source-service' => 'rv-base.time.current.source.db-adapter',
-                'source' => array(
+                'source' => [
                     'adapter' => 'Zend\Db\Adapter\Adapter',
-                ),
-            ),
-            'request' => array(
+                ],
+            ],
+            'request' => [
                 'source-service' => 'rv-base.time.request.source.current-time',
-                'source' => array(
+                'source' => [
                     'current-time-service' => 'rv-base.time.current',
-                ),
-            ),
-        ),
+                ],
+            ],
+        ],
         */
-    ),
+    ],
 
-    'controller_plugins' => array(
-		'invokables' => array(
+    'controller_plugins' => [
+		'invokables' => [
 			'notAllowed' => 'RvBase\Mvc\Controller\Plugin\NotAllowed',
-		),
-	),
+		],
+	],
 
-    'service_manager' => array(
-        'factories' => array(
+    'service_manager' => [
+        'factories' => [
             'rv-base.dispatch-listener' => 'RvBase\Mvc\Service\DispatchListenerFactory',
             'rv-base.http-view-manager' => 'RvBase\Mvc\Service\HttpViewManagerFactory',
             'rv-base.mail.addresses' => 'RvBase\Mail\AddressProviderServiceFactory',
@@ -176,19 +176,25 @@ return array(
 			'rv-base.time.request' => 'RvBase\DateTime\Service\RequestTime\RequestTimeProviderFactory',
 			'rv-base.time.request.source.current-time' => 'RvBase\DateTime\Service\RequestTime\Source\CurrentTimeSourceFactory',
             'rv-base.view-manager' => 'RvBase\Mvc\Service\ViewManagerFactory',
-		),
-		'invokables' => array(
+		],
+		'invokables' => [
             'rv-base.inject-template-from-route-listener' => 'RvBase\View\Http\InjectTemplateFromRouteListener',
             /*
             'rv-base.permissions.acl.identity-role-provider' => 'MyModule\Permissions\Acl\Role\IdentityRoleProvider',
              */
-		),
-    ),
+		],
+    ],
 
-    'filters' => array(
-        'invokables' => array(
+    'filters' => [
+        'invokables' => [
             'EmTypograph' => 'RvBase\Filter\EmTypograph',
             'HtmlPurifier' => 'RvBase\Filter\HtmlPurifier',
-        ),
-    ),
-);
+        ],
+    ],
+
+    'view_helpers' => [
+        'factories' => [
+            'IsAllowed' => \RvBase\View\Helper\IsAllowedFactory::class,
+        ],
+    ],
+];

@@ -32,14 +32,6 @@ class FilterHelper extends AbstractHelper
 
     public function render($value)
     {
-//        return '';
-//        $hash = md5($value);
-//        $file = __DIR__ . '/../../../../../../../data/cache/filter-' . get_class($this) . '-' . $hash;
-//        if(!is_file($file))
-//        {
-//            file_put_contents($file, $this->filter->filter($value));
-//        }
-//        return file_get_contents($file);
         $storage = $this->cacheStorage;
         if($storage instanceof StorageInterface)
         {
